@@ -1,10 +1,11 @@
 import React from 'react';
 import './App.css';
+import { main } from './test-utils/data-test-ids';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">Repository search</header>
+    <div data-testid={main}>
+      <header>Repository search</header>
     </div>
   );
 }

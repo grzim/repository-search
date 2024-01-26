@@ -1,5 +1,9 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
 
+console.log(
+  "rocess.env['REACT_APP_GITHUB_TOKEN']",
+  process.env['REACT_APP_GITHUB_TOKEN'],
+);
 export const client = new ApolloClient({
   uri: 'https://api.github.com/graphql',
   cache: new InMemoryCache(),
