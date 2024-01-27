@@ -2,10 +2,11 @@ import { jest } from '@jest/globals';
 import { client } from '../../apollo-client';
 import { fetchReactRepos } from '../fetch-react-repos';
 import { REPOSITORIES_DETAILS_QUERY } from '../../queries/repositories-details-query';
-import { singleRepoMock } from './mocks';
-import { FetchReactReposResponse, Spy } from '../../types';
+import { singleRepoMock } from '../../../test-utils/mocks';
+import { Spy } from '../../../test-utils/types';
+import { GraphQLRepoResponse } from '../../../models/Repository';
 
-const mockClientResponseWith = (responseMock: FetchReactReposResponse) =>
+const mockClientResponseWith = (responseMock: GraphQLRepoResponse[]) =>
   (client.query as jest.Mock).mockImplementation(() =>
     Promise.resolve(responseMock),
   );

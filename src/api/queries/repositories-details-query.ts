@@ -7,8 +7,13 @@ export const REPOSITORIES_DETAILS_QUERY = gql`
         node {
           ... on Repository {
             name
-            id
             url
+            stargazers {
+              totalCount
+            }
+            forks {
+              totalCount
+            }
           }
         }
       }
