@@ -6,7 +6,6 @@ export const fetchReactRepos = async () => {
     const { data } = await client.query({
       query: REPOSITORIES_DETAILS_QUERY,
     });
-    console.log({ data });
     return data.search.edges;
   } catch (error) {
     console.error('Error fetching repositories:', error);
