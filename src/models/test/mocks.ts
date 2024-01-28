@@ -1,4 +1,4 @@
-import { createRange } from '../../utility-fns';
+import { createRange } from '../../utils/transform-fns';
 import { Repository } from '../Repository';
 import { GraphQLRepoResponse, transformSingleRepo } from '../transformations';
 

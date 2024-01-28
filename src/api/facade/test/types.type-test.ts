@@ -1,4 +1,3 @@
-// Test 1: Basic conversion
 import {
   CamelToSnakeCase,
   ConvertFieldsToSnakeCase,

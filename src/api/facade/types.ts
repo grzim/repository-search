@@ -1,6 +1,9 @@
-export type SearchInOptions = 'name' | 'description' | 'readme';
-export type OrderField = 'stars' | 'forks' | 'updated_at';
-export type OrderDirection = 'asc' | 'desc';
+import {
+  orderDirections,
+  orderFields,
+  searchInOptions,
+} from './search-options';
+
 export type OrderBy = {
   field: OrderField;
   direction: OrderDirection;
@@ -50,3 +53,7 @@ export type FetchReposOptions = {
 export type FetchReactRepos = <DataType>(
   options?: FetchReposOptions,
 ) => Promise<GitHubResponseWrapper<DataType>[]>;
+
+export type SearchInOptions = (typeof searchInOptions)[number];
+export type OrderField = (typeof orderFields)[number];
+export type OrderDirection = (typeof orderDirections)[number];
