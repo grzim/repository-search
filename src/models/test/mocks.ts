@@ -1,6 +1,6 @@
 import { createRange } from '../../utility-fns';
-import { GraphQLRepoResponse, Repository } from '../Repository';
-import { transformSingleRepo } from '../transformations';
+import { Repository } from '../Repository';
+import { GraphQLRepoResponse, transformSingleRepo } from '../transformations';
 
 export const getGraphQLRepoResponseMocks = (
   numberOfItems: number,

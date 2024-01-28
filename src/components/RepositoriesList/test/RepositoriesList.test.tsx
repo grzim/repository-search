@@ -6,8 +6,10 @@ import { getForks, getStargazers, RepositoriesList } from '../RepositoriesList';
 import { act } from 'react-dom/test-utils';
 import { getGraphQLRepoResponseMocks } from '../../../models/test/mocks';
 import { loader, table } from '../../../test-utils/data-test-ids';
-import { GraphQLRepoResponse } from '../../../models/Repository';
-import { transformGQLRepositoriesResponse } from '../../../models/transformations';
+import {
+  GraphQLRepoResponse,
+  transformGQLRepositoriesResponse,
+} from '../../../models/transformations';
 
 jest.mock('../../../api/facade/fetch-react-repos', () => ({
   fetchReactRepos: jest.fn(),

@@ -1,6 +1,15 @@
-import { GraphQLRepoResponse, Repository } from './Repository';
+import { Repository } from './Repository';
+import { GitHubResponseWrapper } from '../api/facade/types';
 
-export const transformSingleRepo = (data: GraphQLRepoResponse): Repository => ({
+type GitHubResponseTransformation<DataType> = (
+  data: GitHubResponseWrapper<DataType>,
+) => DataType;
+
+export type GraphQLRepoResponse = GitHubResponseWrapper<Repository>;
+
+export const transformSingleRepo: GitHubResponseTransformation<Repository> = (
+  data,
+) => ({
   name: data.node.name,
   url: data.node.url,
   stargazers: data.node.stargazers.totalCount,

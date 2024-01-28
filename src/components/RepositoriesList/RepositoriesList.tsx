@@ -13,7 +13,7 @@ export const RepositoriesList: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const fetchedRepos = await fetchReactRepos();
+        const fetchedRepos = await fetchReactRepos<Repository>();
         setRepos(transformGQLRepositoriesResponse(fetchedRepos));
       } catch (error) {
         console.error('Failed to fetch repositories:', error);
@@ -30,7 +30,7 @@ export const RepositoriesList: React.FC = () => {
   return (
     <ul data-testid={table}>
       {repos.map((repo) => (
-        <li key={repo.name}>
+        <li key={repo.url}>
           <a href={repo.url} target="_blank" rel="noopener noreferrer">
             {repo.name}
           </a>{' '}

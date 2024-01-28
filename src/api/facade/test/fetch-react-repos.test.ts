@@ -3,12 +3,13 @@ import { client } from '../../apollo-client';
 import { fetchReactRepos } from '../fetch-react-repos';
 import { REPOSITORIES_DETAILS_QUERY } from '../../queries/repositories-details-query';
 import { Spy } from '../../../test-utils/types';
-import { GraphQLRepoResponse } from '../../../models/Repository';
 import { getGraphQLRepoResponseMocks } from '../../../models/test/mocks';
+import { OrderBy, SearchInOptions } from '../types';
+import { GraphQLRepoResponse } from '../../../models/transformations';
 
 const mockClientResponseWith = (responseMock: GraphQLRepoResponse[]) =>
   (client.query as jest.Mock).mockImplementation(() =>
-    Promise.resolve(responseMock),
+    Promise.resolve({ data: { search: { edges: responseMock } } }),
   );
 
 describe('fetchReactRepos', () => {
@@ -18,6 +19,7 @@ describe('fetchReactRepos', () => {
   beforeEach(() => {
     spy = jest.spyOn(client, 'query');
     singleRepoMock = getGraphQLRepoResponseMocks(1);
+    mockClientResponseWith(singleRepoMock);
   });
 
   afterEach(() => {
@@ -25,15 +27,27 @@ describe('fetchReactRepos', () => {
   });
 
   it('calls client.query only once', async () => {
-    mockClientResponseWith(singleRepoMock);
     await fetchReactRepos();
     expect(client.query).toHaveBeenCalledTimes(1);
   });
 
-  it('calls client.query with the correct parameters', async () => {
-    mockClientResponseWith(singleRepoMock);
-    const expectedParameters = { query: REPOSITORIES_DETAILS_QUERY };
-    await fetchReactRepos();
+  it('calls client.query with the correct parameters when searching in multiple fields', async () => {
+    const baseSearchTerm = 'react';
+    const searchIn: SearchInOptions[] = ['name', 'description'];
+    const orderBy: OrderBy = { field: 'stars', direction: 'desc' };
+
+    const expectedSearchTerm = 'name:react description:react sort:stars-desc';
+
+    const expectedParameters = {
+      query: REPOSITORIES_DETAILS_QUERY,
+      variables: {
+        searchTerm: expectedSearchTerm,
+        first: 10,
+      },
+    };
+
+    await fetchReactRepos({ searchTerm: baseSearchTerm, searchIn, orderBy });
+
     expect(spy).toHaveBeenCalledWith(expectedParameters);
   });
 });
