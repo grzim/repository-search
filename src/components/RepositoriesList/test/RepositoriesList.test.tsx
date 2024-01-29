@@ -1,62 +1,50 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { fetchReactRepos } from '../../../api/facade/fetch-react-repos';
 import { getForks, getStargazers, RepositoriesList } from '../RepositoriesList';
 import { act } from 'react-dom/test-utils';
 import { getGraphQLRepoResponseMocks } from '../../../models/test/mocks';
-import { loader, table } from '../../../test-utils/data-test-ids';
-import {
-  GraphQLRepoResponse,
-  transformGQLRepositoriesResponse,
-} from '../../../models/transformations';
+import { loader } from '../../../test-utils/data-test-ids';
+import { transformGQLRepositoriesResponse } from '../../../models/transformations';
+import { Repository } from '../../../models/Repository';
 
 jest.mock('../../../api/facade/fetch-react-repos', () => ({
   fetchReactRepos: jest.fn(),
 }));
 
+export const expectRepositoriesToBePresent = (repos: Repository[]): void => {
+  repos
+    .map((repo) => [repo.name, getStargazers(repo), getForks(repo)])
+    .forEach(([name, stargazers, forks]: string[]) => {
+      for (const item of [name, stargazers, forks])
+        expect(
+          screen.getByText(item as string, { exact: false }),
+        ).toBeInTheDocument();
+    });
+};
+
+const graphQLRepoMocks = getGraphQLRepoResponseMocks(10);
 describe('RepositoriesList', () => {
-  let graphQLRepoMocks: GraphQLRepoResponse[];
-  beforeEach(() => {
-    graphQLRepoMocks = getGraphQLRepoResponseMocks(10);
-    (fetchReactRepos as jest.Mock).mockImplementation(
-      () =>
-        new Promise((resolve) => {
-          setTimeout(() => resolve(graphQLRepoMocks), 100);
-        }),
-    );
+  describe('when isLoading=true', () => {
+    it('displays a loading state', async () => {
+      render(<RepositoriesList repos={[]} isLoading={true} />);
+      expect(screen.queryByTestId(loader)).toBeInTheDocument();
+    });
   });
 
-  it('displays a loading state initially', async () => {
-    render(<RepositoriesList />);
-    expect(screen.queryByTestId(loader)).toBeInTheDocument();
-  });
-
-  it('hides a loading message when data is displayed', async () => {
-    render(<RepositoriesList />);
-    expect(screen.queryByTestId(table)).not.toBeInTheDocument();
-    await waitFor(() =>
-      expect(screen.queryByTestId(table)).toBeInTheDocument(),
-    );
-
-    expect(screen.queryByTestId(loader)).not.toBeInTheDocument();
-  });
-
-  it('fetches repositories and displays them', async () => {
-    const repos = transformGQLRepositoriesResponse(graphQLRepoMocks);
-    await act(async () => {
-      render(<RepositoriesList />);
+  describe('when isLoading=false', () => {
+    it('hides a loading message', async () => {
+      render(<RepositoriesList repos={[]} isLoading={false} />);
+      expect(screen.queryByTestId(loader)).not.toBeInTheDocument();
     });
 
-    await waitFor(() => {
-      repos
-        .map((repo) => [repo.name, getStargazers(repo), getForks(repo)])
-        .forEach(([name, stargazers, forks]: string[]) => {
-          for (const item of [name, stargazers, forks])
-            expect(
-              screen.getByText(item as string, { exact: false }),
-            ).toBeInTheDocument();
-        });
+    it('displays repositories', async () => {
+      const repos = transformGQLRepositoriesResponse(graphQLRepoMocks);
+      await act(async () => {
+        render(<RepositoriesList repos={repos} isLoading={false} />);
+      });
+
+      await waitFor(() => expectRepositoriesToBePresent(repos));
     });
   });
 });

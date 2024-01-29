@@ -1,19 +1,12 @@
 import { client } from '../apollo-client';
 import { REPOSITORIES_DETAILS_QUERY } from '../queries/repositories-details-query';
-import {
-  FetchReactRepos,
-  OrderBy,
-  QueryResult,
-  SearchInOptions,
-} from './types';
+import { FetchReposOptions, GitHubResponseWrapper, QueryResult } from './types';
 import { constructQueryString } from './utils';
 
-export const fetchReactRepos: FetchReactRepos = async <DataType>({
-  searchTerm = 'react',
-  searchIn = ['name', 'description'] as SearchInOptions[],
-  orderBy = { field: 'stars', direction: 'desc' } as OrderBy,
-} = {}) => {
-  const queryString = constructQueryString(searchTerm, searchIn, orderBy);
+export const fetchReactRepos = async <DataType>(
+  options: FetchReposOptions,
+): Promise<GitHubResponseWrapper<DataType>[]> => {
+  const queryString = constructQueryString(options);
 
   try {
     const {

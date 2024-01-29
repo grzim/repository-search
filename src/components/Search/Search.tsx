@@ -1,4 +1,4 @@
-import { SearchComponentProps, SearchState } from './types';
+import { SearchComponentProps } from './types';
 import React, { useState } from 'react';
 import {
   orderDirections,
@@ -6,24 +6,24 @@ import {
   searchInOptions,
 } from '../../api/facade/search-options';
 import { handleChange } from '../../utils/ui-fns';
-import { searchInput, searchInSelect } from '../../test-utils/data-test-ids';
+import {
+  searchButton,
+  searchInput,
+  searchInSelect,
+} from '../../test-utils/data-test-ids';
+import { FetchReposOptions } from '../../api/facade/types';
 
-export const Search = ({ onSearchTermChange }: SearchComponentProps) => {
-  const [state, setState] = useState<SearchState>({
-    searchTerm: '',
-    orderBy: orderFields[0],
-    orderDirection: orderDirections[0],
-    searchIn: [searchInOptions[0]],
-  });
-
+export const Search = ({
+  onSearchTermChange,
+  initialState,
+}: SearchComponentProps) => {
+  const [state, setState] = useState<FetchReposOptions>(initialState);
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
-    const newState = handleChange<SearchState>(event, state);
+    const newState = handleChange(event, state);
     setState(newState);
-    onSearchTermChange(newState);
   };
-
   return (
     <div>
       <input
@@ -35,7 +35,11 @@ export const Search = ({ onSearchTermChange }: SearchComponentProps) => {
         placeholder="Search Term"
       />
 
-      <select name="orderBy" value={state.orderBy} onChange={handleInputChange}>
+      <select
+        name="orderBy.field"
+        value={state.orderBy?.field}
+        onChange={handleInputChange}
+      >
         {orderFields.map((field) => (
           <option key={field} value={field}>
             {field}
@@ -44,8 +48,8 @@ export const Search = ({ onSearchTermChange }: SearchComponentProps) => {
       </select>
 
       <select
-        name="orderDirection"
-        value={state.orderDirection}
+        name="orderBy.direction"
+        value={state.orderBy?.direction}
         onChange={handleInputChange}
       >
         {orderDirections.map((direction) => (
@@ -68,6 +72,14 @@ export const Search = ({ onSearchTermChange }: SearchComponentProps) => {
           </option>
         ))}
       </select>
+      <div>
+        <button
+          data-testid={searchButton}
+          onClick={() => onSearchTermChange(state)}
+        >
+          Search
+        </button>
+      </div>
     </div>
   );
 };

@@ -1,27 +1,52 @@
-import { render, act } from '@testing-library/react';
-import React, { useEffect, useState } from 'react';
-import { useRepositories } from '../../../hooks/useRepositories';
+import { render, waitFor } from '@testing-library/react';
+import React, { useRef } from 'react';
+import { useRepositories } from '../useRepositories';
+import { FetchReposOptions } from '../../api/facade/types';
+import { getGraphQLRepoResponseMocks } from '../../models/test/mocks';
+import { act } from 'react-dom/test-utils';
 
-// Mock the fetchReactRepos function
-jest.mock('../api/facade/fetch-react-repos', () => ({
-  fetchReactRepos: jest.fn(),
+const mockRepos = getGraphQLRepoResponseMocks(10);
+jest.mock('../../api/facade/fetch-react-repos', () => ({
+  fetchReactRepos: () => Promise.resolve(mockRepos),
 }));
 
-// Optional: Mock the transformGQLRepositoriesResponse function if it's a separate import
-jest.mock('../path/to/transformGQLRepositoriesResponse', () => ({
-  transformGQLRepositoriesResponse: jest
-    .fn()
-    .mockImplementation((data) => data),
-}));
+let TestComponent: React.FC<{ searchTerm: string }>;
 
-const TestComponent = (props: ) => {
-  const { isLoading, repos } = useRepositories(props.options);
+describe('useRepositories hook', () => {
+  beforeEach(() => {
+    // eslint-disable-next-line react/display-name
+    TestComponent = ({ searchTerm }: { searchTerm: string }) => {
+      const options = useRef<FetchReposOptions>({ searchTerm });
+      const { isLoading, repos } = useRepositories(options.current);
+      return (
+        <div data-testid="test-component">
+          <div data-testid="loading-state">{isLoading.toString()}</div>
+          <div data-testid="repos-count">{repos.length}</div>
+        </div>
+      );
+    };
+  });
+  it('starts with isLoading true and empty repos', async () => {
+    const { getByTestId } = render(<TestComponent searchTerm="test" />);
 
-  return (
-    <div data-testid="test-component">
-    <div data-testid="loading-state">{isLoading.toString()}</div>
-      <div data-testid="repos-count">{repos.length}</div>
-    </div>
-);
-};
+    await act(async () => {
+      expect(getByTestId('loading-state').textContent).toBe('true');
+      expect(getByTestId('repos-count').textContent).toBe('0');
+    });
+  });
 
+  it('sets isLoading to false and updates repos after fetch', async () => {
+    const { getByTestId } = render(<TestComponent searchTerm="test" />);
+    expect(getByTestId('loading-state').textContent).toBe('true');
+
+    await waitFor(() => {
+      expect(getByTestId('repos-count').textContent).toBe(
+        mockRepos.length.toString(),
+      );
+    });
+
+    await waitFor(() => {
+      expect(getByTestId('loading-state').textContent).toBe('false');
+    });
+  });
+});

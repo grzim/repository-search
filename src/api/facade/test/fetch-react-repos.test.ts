@@ -27,7 +27,7 @@ describe('fetchReactRepos', () => {
   });
 
   it('calls client.query only once', async () => {
-    await fetchReactRepos();
+    await fetchReactRepos({ searchTerm: '' });
     expect(client.query).toHaveBeenCalledTimes(1);
   });
 

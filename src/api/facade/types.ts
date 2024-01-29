@@ -13,7 +13,7 @@ export type Edge<T> = {
 };
 
 export type SearchResult<T> = {
-  edges: Edge<T>[];
+  edges: GitHubResponseWrapper<T>[];
 };
 
 export type QueryResult<T> = {
@@ -45,14 +45,10 @@ export type GitHubResponseWrapper<T> = Edge<
 >;
 
 export type FetchReposOptions = {
-  searchTerm?: string;
+  searchTerm: string;
   searchIn?: SearchInOptions[];
   orderBy?: OrderBy;
 };
-
-export type FetchReactRepos = <DataType>(
-  options?: FetchReposOptions,
-) => Promise<GitHubResponseWrapper<DataType>[]>;
 
 export type SearchInOptions = (typeof searchInOptions)[number];
 export type OrderField = (typeof orderFields)[number];

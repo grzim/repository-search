@@ -1,4 +1,5 @@
 import {
+  FetchReposOptions,
   OrderDirection,
   OrderField,
   SearchInOptions,
@@ -12,10 +13,6 @@ export type SearchState = {
 };
 
 export type SearchComponentProps = {
-  onSearchTermChange: (params: {
-    searchTerm: string;
-    orderBy: OrderField;
-    orderDirection: OrderDirection;
-    searchIn: SearchInOptions[];
-  }) => void;
+  onSearchTermChange: (params: FetchReposOptions) => void;
+  initialState: FetchReposOptions;
 };

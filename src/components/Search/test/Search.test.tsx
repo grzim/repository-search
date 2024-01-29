@@ -1,14 +1,19 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import {
   orderDirections,
   orderFields,
   searchInOptions,
 } from '../../../api/facade/search-options';
-import { searchInput, searchInSelect } from '../../../test-utils/data-test-ids';
+import {
+  searchButton,
+  searchInput,
+  searchInSelect,
+} from '../../../test-utils/data-test-ids';
 import { Search } from '../Search';
 import { SearchInOptions } from '../../../api/facade/types';
+import { initialSearchState } from '../initial-search-state';
 
 const newSearchTerm = 'React';
 
@@ -21,15 +26,20 @@ const newOrderDirection = orderDirections[1];
 const newSearchIn: SearchInOptions[] = [searchInOptions[1], searchInOptions[2]];
 
 describe('SearchComponent', () => {
-  it('updates searchTerm on input change', () => {
+  it('updates searchTerm on button click', () => {
     const mockOnSearchTermChange = jest.fn();
     const { getByTestId } = render(
-      <Search onSearchTermChange={mockOnSearchTermChange} />,
+      <Search
+        onSearchTermChange={mockOnSearchTermChange}
+        initialState={initialSearchState}
+      />,
     );
 
     fireEvent.change(getByTestId(searchInput), {
       target: { value: newSearchTerm },
     });
+
+    fireEvent.click(getByTestId(searchButton));
 
     expect(mockOnSearchTermChange).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -38,36 +48,50 @@ describe('SearchComponent', () => {
     );
   });
 
-  it('updates orderBy on select change', () => {
+  it('updates orderBy ', () => {
     const mockOnSearchTermChange = jest.fn();
-    const { getByDisplayValue } = render(
-      <Search onSearchTermChange={mockOnSearchTermChange} />,
+    const { getByDisplayValue, getByTestId } = render(
+      <Search
+        onSearchTermChange={mockOnSearchTermChange}
+        initialState={initialSearchState}
+      />,
     );
 
     fireEvent.change(getByDisplayValue(initialOrderBy), {
       target: { value: newOrderBy },
     });
 
+    fireEvent.click(getByTestId(searchButton));
+
     expect(mockOnSearchTermChange).toHaveBeenCalledWith(
       expect.objectContaining({
-        orderBy: newOrderBy,
+        orderBy: expect.objectContaining({
+          field: newOrderBy,
+        }),
       }),
     );
   });
 
-  it('updates orderDirection on select change', () => {
+  it('updates orderDirection', () => {
     const mockOnSearchTermChange = jest.fn();
-    const { getByDisplayValue } = render(
-      <Search onSearchTermChange={mockOnSearchTermChange} />,
+    const { getByDisplayValue, getByTestId } = render(
+      <Search
+        onSearchTermChange={mockOnSearchTermChange}
+        initialState={initialSearchState}
+      />,
     );
 
     fireEvent.change(getByDisplayValue(initialOrderDirection), {
       target: { value: newOrderDirection },
     });
 
+    fireEvent.click(getByTestId(searchButton));
+
     expect(mockOnSearchTermChange).toHaveBeenCalledWith(
       expect.objectContaining({
-        orderDirection: newOrderDirection,
+        orderBy: expect.objectContaining({
+          direction: newOrderDirection,
+        }),
       }),
     );
   });
@@ -75,10 +99,11 @@ describe('SearchComponent', () => {
   it('updates searchIn on multiple select change', async () => {
     const mockOnSearchTermChange = jest.fn();
     const { getByTestId } = render(
-      <Search onSearchTermChange={mockOnSearchTermChange} />,
+      <Search
+        onSearchTermChange={mockOnSearchTermChange}
+        initialState={initialSearchState}
+      />,
     );
-
-    // Access the multiple select element
 
     const searchInSelectElement = getByTestId(searchInSelect);
 
@@ -88,11 +113,11 @@ describe('SearchComponent', () => {
       option.selected = newSearchIn.includes(option.value as SearchInOptions);
     });
 
-    // Fire the change event on the select element after updating the options
     fireEvent.change(searchInSelectElement);
 
-    // Use setTimeout to wait for the state update and the callback invocation
     await new Promise(process.nextTick);
+
+    fireEvent.click(getByTestId(searchButton));
 
     expect(mockOnSearchTermChange).toHaveBeenCalledWith(
       expect.objectContaining({

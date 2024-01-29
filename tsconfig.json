@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "lib": ["dom", "es6", "dom.iterable", "scripthost"],
+    "lib": ["dom", "es6", "dom.iterable", "scripthost", "ESNext"],
     "outDir": "./dist",
     "rootDir": "./src",
     "strict": true,
