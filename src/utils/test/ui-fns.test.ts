@@ -45,7 +45,7 @@ describe('handleChange', () => {
     Object.setPrototypeOf(target, HTMLSelectElement.prototype);
     const mockEvent = {
       target,
-    } as unknown as React.ChangeEvent<HTMLSelectElement>;
+    } as unknown as React.ChangeEvent<HTMLInputElement>;
 
     const expectedState = { field: ['option2', 'option3'] };
 
@@ -62,7 +62,7 @@ describe('handleChange', () => {
     };
     const mockEvent = {
       target,
-    } as unknown as React.ChangeEvent<HTMLSelectElement>;
+    } as unknown as React.ChangeEvent<HTMLInputElement>;
     Object.setPrototypeOf(target, HTMLSelectElement.prototype);
 
     const expectedState = { field: ['option1'] };

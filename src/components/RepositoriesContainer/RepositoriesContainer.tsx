@@ -3,7 +3,7 @@ import { RepositoriesList } from '../RepositoriesList/RepositoriesList';
 import { Search } from '../Search/Search';
 import { useRepositories } from '../../hooks/useRepositories';
 import { FetchReposOptions } from '../../api/facade/types';
-import { initialSearchState } from '../Search/initial-search-state';
+import { initialSearchState } from '../Search/utils/initial-search-state';
 
 export const RepositoriesContainer = () => {
   const [searchParams, setSearchParams] =

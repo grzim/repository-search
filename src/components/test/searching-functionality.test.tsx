@@ -7,9 +7,9 @@ import React from 'react';
 import { expectRepositoriesToBePresent } from '../RepositoriesList/test/RepositoriesList.test';
 import { getGraphQLRepoResponseMocks } from '../../models/test/mocks';
 import {
-  loader,
-  searchButton,
-  searchInput,
+  loaderId,
+  searchButtonId,
+  searchInputId,
 } from '../../test-utils/data-test-ids';
 
 jest.mock('../../api/facade/fetch-react-repos', () => ({
@@ -27,15 +27,15 @@ describe('Integration between Search and RepositoriesList within RepositoriesCon
 
     render(<RepositoriesContainer />);
 
-    fireEvent.change(screen.getByTestId(searchInput), {
+    fireEvent.change(screen.getByTestId(searchInputId), {
       target: { value: 'React' },
     });
-    fireEvent.click(screen.getByTestId(searchButton));
+    fireEvent.click(screen.getByTestId(searchButtonId));
 
-    expect(screen.getByTestId(loader)).toBeInTheDocument();
+    expect(screen.getByTestId(loaderId)).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.queryByTestId(loader)).not.toBeInTheDocument();
+      expect(screen.queryByTestId(loaderId)).not.toBeInTheDocument();
       expectRepositoriesToBePresent(
         transformGQLRepositoriesResponse(mockedReposResponse),
       );

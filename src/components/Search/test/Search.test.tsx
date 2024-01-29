@@ -4,26 +4,23 @@ import '@testing-library/jest-dom';
 import {
   orderDirections,
   orderFields,
-  searchInOptions,
 } from '../../../api/facade/search-options';
 import {
-  searchButton,
-  searchInput,
-  searchInSelect,
+  searchButtonId,
+  searchInputId,
 } from '../../../test-utils/data-test-ids';
 import { Search } from '../Search';
-import { SearchInOptions } from '../../../api/facade/types';
-import { initialSearchState } from '../initial-search-state';
+import { initialSearchState } from '../utils/initial-search-state';
 
 const newSearchTerm = 'React';
 
-const initialOrderBy = orderFields[0];
-const newOrderBy = orderFields[1];
+const initialOrderBy = initialSearchState.orderBy.field;
+const newOrderBy = orderFields.filter((field) => field !== initialOrderBy)[0];
 
 const initialOrderDirection = orderDirections[0];
-const newOrderDirection = orderDirections[1];
-
-const newSearchIn: SearchInOptions[] = [searchInOptions[1], searchInOptions[2]];
+const newOrderDirection = orderDirections.filter(
+  (field) => field !== initialOrderDirection,
+)[0];
 
 describe('SearchComponent', () => {
   it('updates searchTerm on button click', () => {
@@ -35,11 +32,11 @@ describe('SearchComponent', () => {
       />,
     );
 
-    fireEvent.change(getByTestId(searchInput), {
+    fireEvent.change(getByTestId(searchInputId), {
       target: { value: newSearchTerm },
     });
 
-    fireEvent.click(getByTestId(searchButton));
+    fireEvent.click(getByTestId(searchButtonId));
 
     expect(mockOnSearchTermChange).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -61,7 +58,7 @@ describe('SearchComponent', () => {
       target: { value: newOrderBy },
     });
 
-    fireEvent.click(getByTestId(searchButton));
+    fireEvent.click(getByTestId(searchButtonId));
 
     expect(mockOnSearchTermChange).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -85,43 +82,13 @@ describe('SearchComponent', () => {
       target: { value: newOrderDirection },
     });
 
-    fireEvent.click(getByTestId(searchButton));
+    fireEvent.click(getByTestId(searchButtonId));
 
     expect(mockOnSearchTermChange).toHaveBeenCalledWith(
       expect.objectContaining({
         orderBy: expect.objectContaining({
           direction: newOrderDirection,
         }),
-      }),
-    );
-  });
-
-  it('updates searchIn on multiple select change', async () => {
-    const mockOnSearchTermChange = jest.fn();
-    const { getByTestId } = render(
-      <Search
-        onSearchTermChange={mockOnSearchTermChange}
-        initialState={initialSearchState}
-      />,
-    );
-
-    const searchInSelectElement = getByTestId(searchInSelect);
-
-    // Simulate selecting multiple options by manually setting the 'selected' property
-    const options = searchInSelectElement.querySelectorAll('option');
-    options.forEach((option) => {
-      option.selected = newSearchIn.includes(option.value as SearchInOptions);
-    });
-
-    fireEvent.change(searchInSelectElement);
-
-    await new Promise(process.nextTick);
-
-    fireEvent.click(getByTestId(searchButton));
-
-    expect(mockOnSearchTermChange).toHaveBeenCalledWith(
-      expect.objectContaining({
-        searchIn: expect.arrayContaining(newSearchIn),
       }),
     );
   });

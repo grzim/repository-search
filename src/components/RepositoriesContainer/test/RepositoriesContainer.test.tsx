@@ -2,7 +2,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { RepositoriesContainer } from '../RepositoriesContainer';
 import * as RepositoriesListModule from '../../RepositoriesList/RepositoriesList';
 import React from 'react';
-import { searchInput } from '../../../test-utils/data-test-ids';
+import { searchInputId } from '../../../test-utils/data-test-ids';
 
 jest.mock('../../RepositoriesList/RepositoriesList', () => ({
   ...jest.requireActual('../../RepositoriesList/RepositoriesList'),
@@ -16,7 +16,7 @@ describe('RepositoriesContainer', () => {
     const { getByTestId } = render(<RepositoriesContainer />);
 
     expect(RepoListComponent).toHaveBeenCalledTimes(1);
-    const searchInputElement = getByTestId(searchInput);
+    const searchInputElement = getByTestId(searchInputId);
 
     fireEvent.change(searchInputElement, { target: { value: 'React' } });
     fireEvent.change(searchInputElement, { target: { value: 'Vue' } });

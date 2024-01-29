@@ -1,6 +1,6 @@
 import { Repository } from '../../models/Repository';
 import React from 'react';
-import { table } from '../../test-utils/data-test-ids';
+import { loaderId, tableId } from '../../test-utils/data-test-ids';
 
 export type RepositoriesListProps = {
   repos: Repository[];
@@ -12,10 +12,10 @@ export const RepositoriesList: React.FC<RepositoriesListProps> = ({
   repos,
   isLoading,
 }) => {
-  if (isLoading) return <div data-testid="loader">Loading...</div>;
+  if (isLoading) return <div data-testid={loaderId}>Loading...</div>;
 
   return (
-    <ul data-testid={table}>
+    <ul data-testid={tableId}>
       {repos.map((repo) => (
         <li key={repo.url}>
           <a href={repo.url} target="_blank" rel="noopener noreferrer">

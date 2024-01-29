@@ -1,6 +1,6 @@
-export const main = 'main';
-export const loader = 'loader';
-export const table = 'table';
-export const searchInput = 'search';
-export const searchInSelect = 'searchInSelect';
-export const searchButton = 'searchButton';
+export const mainId = 'mainId';
+export const loaderId = 'loaderId';
+export const tableId = 'tableId';
+export const searchInputId = 'searchInputId';
+export const searchInSelectId = 'searchInSelectId';
+export const searchButtonId = 'searchButtonId';

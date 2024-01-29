@@ -4,7 +4,7 @@ import '@testing-library/jest-dom';
 import { getForks, getStargazers, RepositoriesList } from '../RepositoriesList';
 import { act } from 'react-dom/test-utils';
 import { getGraphQLRepoResponseMocks } from '../../../models/test/mocks';
-import { loader } from '../../../test-utils/data-test-ids';
+import { loaderId } from '../../../test-utils/data-test-ids';
 import { transformGQLRepositoriesResponse } from '../../../models/transformations';
 import { Repository } from '../../../models/Repository';
 
@@ -28,14 +28,14 @@ describe('RepositoriesList', () => {
   describe('when isLoading=true', () => {
     it('displays a loading state', async () => {
       render(<RepositoriesList repos={[]} isLoading={true} />);
-      expect(screen.queryByTestId(loader)).toBeInTheDocument();
+      expect(screen.queryByTestId(loaderId)).toBeInTheDocument();
     });
   });
 
   describe('when isLoading=false', () => {
     it('hides a loading message', async () => {
       render(<RepositoriesList repos={[]} isLoading={false} />);
-      expect(screen.queryByTestId(loader)).not.toBeInTheDocument();
+      expect(screen.queryByTestId(loaderId)).not.toBeInTheDocument();
     });
 
     it('displays repositories', async () => {

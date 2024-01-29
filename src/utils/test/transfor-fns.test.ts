@@ -1,4 +1,5 @@
 import { createDeepCopy, getOnPath, updateInPath } from '../transform-fns';
+
 describe('getOnPath', () => {
   const testObject = {
     level1: {

@@ -1,85 +1,119 @@
-import { SearchComponentProps } from './types';
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  TextField,
+} from '@mui/material';
 import {
   orderDirections,
   orderFields,
   searchInOptions,
 } from '../../api/facade/search-options';
 import { handleChange } from '../../utils/ui-fns';
-import {
-  searchButton,
-  searchInput,
-  searchInSelect,
-} from '../../test-utils/data-test-ids';
 import { FetchReposOptions } from '../../api/facade/types';
+import { SearchComponentProps } from './types';
+import {
+  searchButtonId,
+  searchInputId,
+  searchInSelectId,
+} from '../../test-utils/data-test-ids';
+import { SearchButtonContainer, SearchContainer } from './styles';
 
 export const Search = ({
   onSearchTermChange,
   initialState,
 }: SearchComponentProps) => {
   const [state, setState] = useState<FetchReposOptions>(initialState);
+
   const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    event:
+      | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+      | SelectChangeEvent<unknown>,
   ) => {
     const newState = handleChange(event, state);
     setState(newState);
   };
+
   return (
-    <div>
-      <input
-        data-testid={searchInput}
-        type="text"
+    <SearchContainer>
+      <TextField
+        inputProps={{ 'data-testid': searchInputId }}
+        label="Search Term"
+        variant="outlined"
         name="searchTerm"
         value={state.searchTerm}
         onChange={handleInputChange}
-        placeholder="Search Term"
+        fullWidth
       />
 
-      <select
-        name="orderBy.field"
-        value={state.orderBy?.field}
-        onChange={handleInputChange}
-      >
-        {orderFields.map((field) => (
-          <option key={field} value={field}>
-            {field}
-          </option>
-        ))}
-      </select>
+      <FormControl variant="outlined" fullWidth>
+        <InputLabel>Order By Field</InputLabel>
+        <Select
+          name="orderBy.field"
+          value={state.orderBy?.field || ''}
+          onChange={handleInputChange}
+          label="Order By Field"
+        >
+          {orderFields.map((field) => (
+            <MenuItem key={field} value={field}>
+              {field}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
-      <select
-        name="orderBy.direction"
-        value={state.orderBy?.direction}
-        onChange={handleInputChange}
-      >
-        {orderDirections.map((direction) => (
-          <option key={direction} value={direction}>
-            {direction}
-          </option>
-        ))}
-      </select>
+      <FormControl variant="outlined" fullWidth>
+        <InputLabel>Order Direction</InputLabel>
+        <Select
+          name="orderBy.direction"
+          value={state.orderBy?.direction || ''}
+          onChange={handleInputChange}
+          label="Order Direction"
+        >
+          {orderDirections.map((direction) => (
+            <MenuItem key={direction} value={direction}>
+              {direction}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
 
-      <select
-        multiple={true}
-        name="searchIn"
-        data-testid={searchInSelect}
-        value={state.searchIn}
-        onChange={handleInputChange}
-      >
-        {searchInOptions.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </select>
-      <div>
-        <button
-          data-testid={searchButton}
+      <FormControl variant="outlined" fullWidth>
+        <InputLabel>Search In</InputLabel>
+        <Select
+          multiple
+          name="searchIn"
+          data-testid={searchInSelectId}
+          inputProps={{ 'data-testid': 'dasds' }}
+          value={state.searchIn || []}
+          onChange={handleInputChange}
+          label="Search In (multiple)"
+          renderValue={(selected) =>
+            Array.isArray(selected) ? selected.join(', ') : ''
+          }
+        >
+          {searchInOptions.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      <SearchButtonContainer>
+        <Button
+          data-testid={searchButtonId}
+          variant="contained"
+          color="primary"
           onClick={() => onSearchTermChange(state)}
         >
           Search
-        </button>
-      </div>
-    </div>
+        </Button>
+      </SearchButtonContainer>
+    </SearchContainer>
   );
 };

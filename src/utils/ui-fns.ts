@@ -1,19 +1,15 @@
 import { defaultToWhenEmpty, getOnPath, updateInPath } from './transform-fns';
-import React from 'react';
+import { ChangeEvent } from 'react';
+import { SelectChangeEvent } from '@mui/material';
 
 export const getOptions = (
   options: HTMLCollectionOf<HTMLOptionElement>,
 ): string[] => Array.from(options).map((option) => option.value);
 
-export type HandleChange = <State extends Record<string, unknown>>(
-  event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
-  state: State,
-) => State;
-
-export const handleChange: HandleChange = <
-  State extends Record<string, unknown>,
->(
-  event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+export const handleChange = <State extends Record<string, unknown>>(
+  event:
+    | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    | SelectChangeEvent<unknown>,
   state: State,
 ) => {
   const target = event.target;
