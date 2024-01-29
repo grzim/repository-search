@@ -1,4 +1,4 @@
-import { defaultToWhenEmpty } from './transform-fns';
+import { defaultToWhenEmpty, getOnPath, updateInPath } from './transform-fns';
 import React from 'react';
 
 export const getOptions = (
@@ -18,14 +18,15 @@ export const handleChange: HandleChange = <
 ) => {
   const target = event.target;
   const name = target.name;
+  const path = name.split('.');
+  const value = getOnPath({ obj: state, path });
   const newValue =
     target instanceof HTMLSelectElement && target.multiple
       ? defaultToWhenEmpty({
-          defaultValue: state[name] as string[],
+          defaultValue: value as string[],
           arr: getOptions(target.selectedOptions),
         })
       : target.value;
 
-  // The assertion to 'State' ensures the returned object matches the state shape
-  return { ...state, [name]: newValue } as State;
+  return updateInPath({ obj: state, path, value: newValue }) as State;
 };
