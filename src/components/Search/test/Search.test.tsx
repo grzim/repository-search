@@ -11,6 +11,8 @@ import {
 } from '../../../test-utils/data-test-ids';
 import { Search } from '../Search';
 import { initialSearchState } from '../utils/initial-search-state';
+import { ThemeProvider } from 'styled-components';
+import theme from '../../../theme';
 
 const newSearchTerm = 'React';
 
@@ -26,10 +28,13 @@ describe('SearchComponent', () => {
   it('updates searchTerm on button click', () => {
     const mockOnSearchTermChange = jest.fn();
     const { getByTestId } = render(
-      <Search
-        onSearchTermChange={mockOnSearchTermChange}
-        initialState={initialSearchState}
-      />,
+      <ThemeProvider theme={theme}>
+        <Search
+          onSearchTermChange={mockOnSearchTermChange}
+          initialState={initialSearchState}
+        />
+        ,
+      </ThemeProvider>,
     );
 
     fireEvent.change(getByTestId(searchInputId), {
@@ -48,10 +53,12 @@ describe('SearchComponent', () => {
   it('updates orderBy ', () => {
     const mockOnSearchTermChange = jest.fn();
     const { getByDisplayValue, getByTestId } = render(
-      <Search
-        onSearchTermChange={mockOnSearchTermChange}
-        initialState={initialSearchState}
-      />,
+      <ThemeProvider theme={theme}>
+        <Search
+          onSearchTermChange={mockOnSearchTermChange}
+          initialState={initialSearchState}
+        />
+      </ThemeProvider>,
     );
 
     fireEvent.change(getByDisplayValue(initialOrderBy), {
@@ -72,10 +79,12 @@ describe('SearchComponent', () => {
   it('updates orderDirection', () => {
     const mockOnSearchTermChange = jest.fn();
     const { getByDisplayValue, getByTestId } = render(
-      <Search
-        onSearchTermChange={mockOnSearchTermChange}
-        initialState={initialSearchState}
-      />,
+      <ThemeProvider theme={theme}>
+        <Search
+          onSearchTermChange={mockOnSearchTermChange}
+          initialState={initialSearchState}
+        />
+      </ThemeProvider>,
     );
 
     fireEvent.change(getByDisplayValue(initialOrderDirection), {

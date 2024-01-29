@@ -1,12 +1,16 @@
 import styled from 'styled-components';
-import { Box } from '@mui/material';
+import { Box, Theme } from '@mui/material';
 import { themeVariables } from '../../theme';
 
-export const SearchContainer = styled(Box)`
+export const SearchContainer = styled(Box)<{ theme: Theme }>`
   display: flex;
-  flex-direction: column;
   gap: ${themeVariables.spacingBig};
   padding: ${themeVariables.spacingBig};
+  ${({ theme }) => `
+    ${theme.breakpoints.down('sm')} {
+      flex-direction: column;
+    }
+  `}
 `;
 
 export const SearchButtonContainer = styled(Box)`

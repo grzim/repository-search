@@ -11,6 +11,8 @@ import {
   searchButtonId,
   searchInputId,
 } from '../../test-utils/data-test-ids';
+import { createTheme } from '@mui/material/styles';
+import { ThemeProvider } from 'styled-components';
 
 jest.mock('../../api/facade/fetch-react-repos', () => ({
   fetchReactRepos: jest.fn(),
@@ -25,7 +27,12 @@ describe('Integration between Search and RepositoriesList within RepositoriesCon
       Promise.resolve(mockedReposResponse),
     );
 
-    render(<RepositoriesContainer />);
+    const theme = createTheme();
+    render(
+      <ThemeProvider theme={theme}>
+        <RepositoriesContainer />
+      </ThemeProvider>,
+    );
 
     fireEvent.change(screen.getByTestId(searchInputId), {
       target: { value: 'React' },

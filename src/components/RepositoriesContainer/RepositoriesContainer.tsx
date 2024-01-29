@@ -4,6 +4,7 @@ import { Search } from '../Search/Search';
 import { useRepositories } from '../../hooks/useRepositories';
 import { FetchReposOptions } from '../../api/facade/types';
 import { initialSearchState } from '../Search/utils/initial-search-state';
+import { CenteredContainer } from './styles';
 
 export const RepositoriesContainer = () => {
   const [searchParams, setSearchParams] =
@@ -11,12 +12,12 @@ export const RepositoriesContainer = () => {
   const { isLoading, repos } = useRepositories(searchParams);
 
   return (
-    <div>
+    <CenteredContainer>
       <Search
         initialState={initialSearchState}
         onSearchTermChange={setSearchParams}
       />
       <RepositoriesList repos={repos} isLoading={isLoading} />
-    </div>
+    </CenteredContainer>
   );
 };
