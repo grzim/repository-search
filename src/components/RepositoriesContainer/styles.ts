@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Theme } from '@mui/material';
+import { Box, Theme } from '@mui/material';
 import { themeVariables } from '../../theme';
 
 export const CenteredContainer = styled.div<{ theme: Theme }>(({ theme }) => ({
@@ -17,3 +17,10 @@ export const CenteredContainer = styled.div<{ theme: Theme }>(({ theme }) => ({
     backgroundColor: 'white',
   },
 }));
+
+export const RepositoriesListContainer = styled(Box)({
+  minHeight: '600px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+});

@@ -3,7 +3,7 @@ import { RepositoriesList } from '../RepositoriesList/RepositoriesList';
 import { Search } from '../Search/Search';
 import { useRepositories } from '../../hooks/useRepositories';
 import { initialSearchState } from '../../models/constants/initial-search-state';
-import { CenteredContainer } from './styles';
+import { CenteredContainer, RepositoriesListContainer } from './styles';
 import { Pagination } from '../Pagination/Pagination';
 import { usePaginationData } from '../../hooks/usePaginationData';
 import { defaultNumberOfItemsPerPage } from '../../models/constants/pagination';
@@ -31,7 +31,9 @@ export const RepositoriesContainer = () => {
         initialState={initialSearchState}
         onSearchTermChange={setSearchParams}
       />
-      <RepositoriesList repos={repos} isLoading={isLoading} />
+      <RepositoriesListContainer>
+        <RepositoriesList repos={repos} isLoading={isLoading} />
+      </RepositoriesListContainer>
       <Pagination
         onPrev={goToPreviousPage}
         onNext={() => endCursor && goToNextPage(endCursor)}

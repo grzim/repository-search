@@ -1,6 +1,7 @@
 import { Repository } from '../../models/ui-related/Repository';
 import React, { useEffect, useState } from 'react';
 import {
+  CircularProgress,
   Link,
   Paper,
   Table,
@@ -29,7 +30,11 @@ export const RepositoriesList: React.FC<RepositoriesListProps> = ({
   }, [isLoading]);
 
   if (isLoading)
-    return <Typography data-testid={loaderId}>Loading...</Typography>;
+    return (
+      <Typography data-testid={loaderId}>
+        <CircularProgress />
+      </Typography>
+    );
 
   if (repos.length === 0) return <Typography>{noDataText}</Typography>;
 
