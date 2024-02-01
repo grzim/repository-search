@@ -21,6 +21,7 @@ import {
 } from '../../test-utils/data-test-ids';
 import { SearchButtonContainer, SearchContainer } from './styles';
 import { FetchSearchOptions } from '../../models/ui-related/search';
+import { areObjectsEqual } from '../../utils/predicates';
 
 type SearchProps = {
   onSearchTermChange: (params: FetchSearchOptions) => void;
@@ -28,6 +29,8 @@ type SearchProps = {
 };
 export const Search = ({ onSearchTermChange, initialState }: SearchProps) => {
   const [state, setState] = useState<FetchSearchOptions>(initialState);
+  const [lastSearchState, setLastSearchState] =
+    useState<FetchSearchOptions>(initialState);
 
   const handleInputChange = (
     event:
@@ -37,6 +40,16 @@ export const Search = ({ onSearchTermChange, initialState }: SearchProps) => {
     const newState = handleChange(event, state);
     setState(newState);
   };
+
+  const handleSearch = () => {
+    onSearchTermChange(state);
+    setLastSearchState(state);
+  };
+
+  const isSearchDisabled =
+    areObjectsEqual({ obj1: state, obj2: lastSearchState }) ||
+    !state.searchTerm ||
+    !state.searchIn.length;
 
   return (
     <SearchContainer>
@@ -106,11 +119,11 @@ export const Search = ({ onSearchTermChange, initialState }: SearchProps) => {
 
       <SearchButtonContainer>
         <Button
-          disabled={!state.searchTerm || !state.searchIn.length}
+          disabled={isSearchDisabled}
           data-testid={searchButtonId}
           variant="contained"
           color="primary"
-          onClick={() => onSearchTermChange(state)}
+          onClick={handleSearch}
         >
           Search
         </Button>

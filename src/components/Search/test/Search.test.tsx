@@ -111,4 +111,47 @@ describe('SearchComponent', () => {
       }),
     );
   });
+
+  it('disables search button when search state is unchanged', () => {
+    const mockOnSearchTermChange = jest.fn();
+    const { getByTestId, rerender } = render(
+      <ThemeProvider theme={theme}>
+        <Search
+          onSearchTermChange={mockOnSearchTermChange}
+          initialState={initialSearchState}
+        />
+      </ThemeProvider>,
+    );
+
+    fireEvent.change(getByTestId(searchInputId), {
+      target: { value: newSearchTerm },
+    });
+    fireEvent.click(getByTestId(searchButtonId));
+
+    expect(mockOnSearchTermChange).toHaveBeenCalledTimes(1);
+    expect(mockOnSearchTermChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        searchTerm: newSearchTerm,
+      }),
+    );
+
+    // Reset the mock function's call count for clarity in the test
+    mockOnSearchTermChange.mockClear();
+
+    // Rerender the component with the new state as the initial state to simulate the state being unchanged
+    rerender(
+      <ThemeProvider theme={theme}>
+        <Search
+          onSearchTermChange={mockOnSearchTermChange}
+          initialState={{ ...initialSearchState, searchTerm: newSearchTerm }} // Use the last state as the new initial state
+        />
+      </ThemeProvider>,
+    );
+
+    // Attempt to perform the search again without changing any inputs
+    fireEvent.click(getByTestId(searchButtonId));
+
+    // The search term change function should not be called this time as the state is unchanged
+    expect(mockOnSearchTermChange).not.toHaveBeenCalled();
+  });
 });
