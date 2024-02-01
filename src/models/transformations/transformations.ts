@@ -1,11 +1,6 @@
-import { Repository } from './Repository';
-import { GitHubResponseWrapper } from '../api/facade/types';
-
-type GitHubResponseTransformation<DataType> = (
-  data: GitHubResponseWrapper<DataType>,
-) => DataType;
-
-export type GraphQLRepoResponse = GitHubResponseWrapper<Repository>;
+import { Repository } from '../ui-related/Repository';
+import { GitHubResponseTransformation } from './type-transfomrations';
+import { GraphQLRepoResponse } from '../api-related/RepositoryApiResponse';
 
 export const transformSingleRepo: GitHubResponseTransformation<Repository> = (
   data,

@@ -12,22 +12,22 @@ import {
   orderDirections,
   orderFields,
   searchInOptions,
-} from '../../api/facade/search-options';
+} from '../../models/constants/search-options';
 import { handleChange } from '../../utils/ui-fns';
-import { FetchReposOptions } from '../../api/facade/types';
-import { SearchComponentProps } from './types';
 import {
   searchButtonId,
   searchInputId,
   searchInSelectId,
 } from '../../test-utils/data-test-ids';
 import { SearchButtonContainer, SearchContainer } from './styles';
+import { FetchSearchOptions } from '../../models/ui-related/search';
 
-export const Search = ({
-  onSearchTermChange,
-  initialState,
-}: SearchComponentProps) => {
-  const [state, setState] = useState<FetchReposOptions>(initialState);
+type SearchProps = {
+  onSearchTermChange: (params: FetchSearchOptions) => void;
+  initialState: FetchSearchOptions;
+};
+export const Search = ({ onSearchTermChange, initialState }: SearchProps) => {
+  const [state, setState] = useState<FetchSearchOptions>(initialState);
 
   const handleInputChange = (
     event:
@@ -106,6 +106,7 @@ export const Search = ({
 
       <SearchButtonContainer>
         <Button
+          disabled={!state.searchTerm || !state.searchIn.length}
           data-testid={searchButtonId}
           variant="contained"
           color="primary"

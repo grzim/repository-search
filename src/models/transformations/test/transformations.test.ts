@@ -1,5 +1,5 @@
 import { transformSingleRepo } from '../transformations';
-import { graphQLReactRepoResponseMock, reactRepoMock } from './mocks';
+import { graphQLReactRepoResponseMock, reactRepoMock } from '../../mocks';
 
 describe('transformRepoData', () => {
   it('transforms GraphQLRepoResponse to Repository', () => {

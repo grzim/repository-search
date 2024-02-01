@@ -1,24 +1,7 @@
-import {
-  orderDirections,
-  orderFields,
-  searchInOptions,
-} from './search-options';
+export type GitHubResponseTransformation<DataType> = (
+  data: GitHubResponseWrapper<DataType>,
+) => DataType;
 
-export type OrderBy = {
-  field: OrderField;
-  direction: OrderDirection;
-};
-export type Edge<T> = {
-  node: T;
-};
-
-export type SearchResult<T> = {
-  edges: GitHubResponseWrapper<T>[];
-};
-
-export type QueryResult<T> = {
-  search: SearchResult<T>;
-};
 export type CamelToSnakeCase<S extends string> =
   S extends `${infer P1}${infer P2}`
     ? `${P1 extends Capitalize<P1> ? '_' : ''}${Lowercase<P1>}${CamelToSnakeCase<P2>}`
@@ -40,16 +23,10 @@ export type ConvertNumberFieldsToObj<T> = {
       : T[P];
 };
 
+type Edge<T> = {
+  node: T;
+};
+
 export type GitHubResponseWrapper<T> = Edge<
   ConvertNumberFieldsToObj<ConvertFieldsToSnakeCase<T>>
 >;
-
-export type FetchReposOptions = {
-  searchTerm: string;
-  searchIn?: SearchInOptions[];
-  orderBy?: OrderBy;
-};
-
-export type SearchInOptions = (typeof searchInOptions)[number];
-export type OrderField = (typeof orderFields)[number];
-export type OrderDirection = (typeof orderDirections)[number];

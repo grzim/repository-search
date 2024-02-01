@@ -1,4 +1,4 @@
-import { defaultToWhenEmpty, getOnPath, updateInPath } from './transform-fns';
+import { defaultToWhenEmpty, getOnPath, setOnPath } from './transform-fns';
 import { ChangeEvent } from 'react';
 import { SelectChangeEvent } from '@mui/material';
 
@@ -24,5 +24,5 @@ export const handleChange = <State extends Record<string, unknown>>(
         })
       : target.value;
 
-  return updateInPath({ obj: state, path, value: newValue }) as State;
+  return setOnPath({ obj: state, path, value: newValue }) as State;
 };

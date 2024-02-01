@@ -1,11 +1,6 @@
 export const createRange = (size: number) =>
   Array.from({ length: size }, (_, i) => i + 1);
 
-export type DefaultToWhenEmptyParams<T> = {
-  defaultValue: T[];
-  arr: T[];
-};
-
 export const createDeepCopy = (obj: object) => {
   // Fallback to JSON methods if structuredClone is not available
   return typeof structuredClone === 'function'
@@ -13,6 +8,10 @@ export const createDeepCopy = (obj: object) => {
     : JSON.parse(JSON.stringify(obj));
 };
 
+export type DefaultToWhenEmptyParams<T> = {
+  defaultValue: T[];
+  arr: T[];
+};
 export const defaultToWhenEmpty = <T>({
   defaultValue,
   arr,
@@ -31,7 +30,7 @@ export const getOnPath = <T, U = unknown>({
     return hasProp ? (acc as Record<PropertyKey, unknown>)[key] : undefined;
   }, obj) as U;
 
-export const updateInPath = <
+export const setOnPath = <
   T extends Record<string, unknown>,
   P extends PropertyKey[],
 >({
@@ -54,3 +53,23 @@ export const updateInPath = <
     return acc[key as keyof typeof acc];
   }, newObj) as T;
 };
+
+export type RemoveEmpty = <T extends Record<string, unknown>>(
+  obj: T,
+) => {
+  [prop in keyof T]: T[prop] extends undefined ? never : T[prop];
+};
+
+export const removeEmpty = ((obj) => {
+  return Object.entries(obj).reduce(
+    (acc, [key, value]) =>
+      value !== undefined ? { ...acc, [key]: value } : acc,
+    {},
+  ) as Record<string, unknown>;
+}) as RemoveEmpty;
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ToVoid = <T = any>(...x: T[]) => void;
+// eslint-disable-next-line
+// @ts-ignore
+export const toVoid: ToVoid = (x): void => (x, undefined); // comma expression for the typing only

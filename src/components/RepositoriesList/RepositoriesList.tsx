@@ -1,4 +1,4 @@
-import { Repository } from '../../models/Repository';
+import { Repository } from '../../models/ui-related/Repository';
 import React, { useEffect, useState } from 'react';
 import {
   Link,

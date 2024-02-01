@@ -4,15 +4,17 @@ import '@testing-library/jest-dom';
 import {
   orderDirections,
   orderFields,
-} from '../../../api/facade/search-options';
+} from '../../../models/constants/search-options';
 import {
   searchButtonId,
   searchInputId,
 } from '../../../test-utils/data-test-ids';
 import { Search } from '../Search';
-import { initialSearchState } from '../utils/initial-search-state';
+import { initialSearchState } from '../../../models/constants/initial-search-state';
 import { ThemeProvider } from 'styled-components';
 import theme from '../../../theme';
+import { searchOptionsMock } from '../../../models/mocks';
+import { setOnPath } from '../../../utils/transform-fns';
 
 const newSearchTerm = 'React';
 
@@ -56,7 +58,11 @@ describe('SearchComponent', () => {
       <ThemeProvider theme={theme}>
         <Search
           onSearchTermChange={mockOnSearchTermChange}
-          initialState={initialSearchState}
+          initialState={setOnPath({
+            obj: searchOptionsMock,
+            path: ['orderBy', 'field'],
+            value: initialOrderBy,
+          })}
         />
       </ThemeProvider>,
     );
@@ -82,7 +88,11 @@ describe('SearchComponent', () => {
       <ThemeProvider theme={theme}>
         <Search
           onSearchTermChange={mockOnSearchTermChange}
-          initialState={initialSearchState}
+          initialState={setOnPath({
+            obj: searchOptionsMock,
+            path: ['orderBy', 'direction'],
+            value: initialOrderDirection,
+          })}
         />
       </ThemeProvider>,
     );

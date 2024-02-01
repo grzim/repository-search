@@ -2,15 +2,23 @@ import React, { useState } from 'react';
 import { RepositoriesList } from '../RepositoriesList/RepositoriesList';
 import { Search } from '../Search/Search';
 import { useRepositories } from '../../hooks/useRepositories';
-import { FetchReposOptions } from '../../api/facade/types';
-import { initialSearchState } from '../Search/utils/initial-search-state';
+import { initialSearchState } from '../../models/constants/initial-search-state';
 import { CenteredContainer } from './styles';
+import { Pagination } from '../Pagination/Pagination';
+import { usePaginationData } from '../../hooks/usePaginationData';
+import { defaultNumberOfItemsPerPage } from '../../models/constants/pagination';
+import { FetchSearchOptions } from '../../models/ui-related/search';
 
 export const RepositoriesContainer = () => {
   const [searchParams, setSearchParams] =
-    useState<FetchReposOptions>(initialSearchState);
-  const { isLoading, repos } = useRepositories(searchParams);
+    useState<FetchSearchOptions>(initialSearchState);
+  const { goToNextPage, goToPreviousPage, paginationOptions } =
+    usePaginationData(defaultNumberOfItemsPerPage);
 
+  const { isLoading, repos, repositoryCount, endCursor } = useRepositories({
+    ...searchParams,
+    ...paginationOptions,
+  });
   return (
     <CenteredContainer>
       <Search
@@ -18,6 +26,13 @@ export const RepositoriesContainer = () => {
         onSearchTermChange={setSearchParams}
       />
       <RepositoriesList repos={repos} isLoading={isLoading} />
+      <Pagination
+        onPrev={goToPreviousPage}
+        onNext={() => endCursor && goToNextPage(endCursor)}
+        totalPages={Math.ceil(
+          repositoryCount ? repositoryCount / defaultNumberOfItemsPerPage : 0,
+        )}
+      />
     </CenteredContainer>
   );
 };

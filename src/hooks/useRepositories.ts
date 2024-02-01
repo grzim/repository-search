@@ -1,24 +1,59 @@
-import { transformGQLRepositoriesResponse } from '../models/transformations';
 import { useEffect, useState } from 'react';
-import { fetchReactRepos } from '../api/facade/fetch-react-repos';
-import { FetchReposOptions } from '../api/facade/types';
-import { Repository } from '../models/Repository';
+import { fetchRepos } from '../api/facade/fetch-repos';
+import { Repository } from '../models/ui-related/Repository';
+import { transformGQLRepositoriesResponse } from '../models/transformations/transformations';
+import { initialPaginationData } from '../models/constants/pagination';
+import { FetchSearchOptions } from '../models/ui-related/search';
+import {
+  FetchPaginationOptions,
+  PaginationResponse,
+} from '../models/api-related/pagination';
 
-export const useRepositories = (options: FetchReposOptions) => {
+type UseRepositoriesOptions = FetchSearchOptions & FetchPaginationOptions;
+
+export const useRepositories = (options: UseRepositoriesOptions) => {
   const [repos, setRepos] = useState<Repository[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  const fetchData = async (options: FetchReposOptions) => {
+  const [paginationData, setPaginationData] = useState<
+    PaginationResponse & { repositoryCount: number }
+  >(initialPaginationData);
+  const [error, setError] = useState<string | null>(null);
+  const prepareFetching = () => {
     setIsLoading(true);
-    const response = await fetchReactRepos<Repository>(options);
-    const transformedRepos = transformGQLRepositoriesResponse(response);
-    setRepos(transformedRepos);
-    setIsLoading(false);
+    setError(null);
   };
 
-  useEffect(() => {
-    if (options.searchTerm) fetchData(options);
-  }, [options]);
+  const fetching = async () => {
+    const { edges, pageInfo, repositoryCount } =
+      await fetchRepos<Repository>(options);
+    setRepos(transformGQLRepositoriesResponse(edges));
+    setPaginationData({ ...pageInfo, repositoryCount });
+  };
 
-  return { isLoading, repos };
+  const fetchFail = () => {
+    console.error('Error fetching repositories:', error);
+    setError('Failed to fetch repositories.');
+  };
+
+  const afterFetchCleanup = () => setIsLoading(false);
+
+  useEffect(() => {
+    const { searchTerm } = options;
+    if (!searchTerm) return;
+
+    const fetchData = async () => {
+      prepareFetching();
+      try {
+        await fetching();
+      } catch (error) {
+        fetchFail();
+      } finally {
+        afterFetchCleanup();
+      }
+    };
+
+    fetchData();
+  }, [JSON.stringify(options)]);
+
+  return { isLoading, repos, ...paginationData, error };
 };

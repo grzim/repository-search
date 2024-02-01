@@ -1,11 +1,11 @@
-import { FetchReposOptions } from '../../../api/facade/types';
 import {
   orderDirections,
   orderFields,
   searchInOptions,
-} from '../../../api/facade/search-options';
+} from './search-options';
+import { FetchSearchOptions } from '../ui-related/search';
 
-export const initialSearchState: Required<FetchReposOptions> = {
+export const initialSearchState: FetchSearchOptions = {
   searchTerm: '',
   orderBy: {
     field: orderFields[0],

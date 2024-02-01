@@ -3,13 +3,13 @@ import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { getForks, getStargazers, RepositoriesList } from '../RepositoriesList';
 import { act } from 'react-dom/test-utils';
-import { getGraphQLRepoResponseMocks } from '../../../models/test/mocks';
+import { getGraphQLRepoResponseMocks } from '../../../models/mocks';
 import { loaderId } from '../../../test-utils/data-test-ids';
-import { transformGQLRepositoriesResponse } from '../../../models/transformations';
-import { Repository } from '../../../models/Repository';
+import { transformGQLRepositoriesResponse } from '../../../models/transformations/transformations';
+import { Repository } from '../../../models/ui-related/Repository';
 
-jest.mock('../../../api/facade/fetch-react-repos', () => ({
-  fetchReactRepos: jest.fn(),
+jest.mock('../../../api/facade/fetch-repos', () => ({
+  fetchRepos: jest.fn(),
 }));
 
 export const expectRepositoriesToBePresent = (repos: Repository[]): void => {
@@ -39,7 +39,7 @@ describe('RepositoriesList', () => {
     });
 
     it('displays repositories', async () => {
-      const repos = transformGQLRepositoriesResponse(graphQLRepoMocks);
+      const repos = transformGQLRepositoriesResponse(graphQLRepoMocks.edges);
       await act(async () => {
         render(<RepositoriesList repos={repos} isLoading={false} />);
       });

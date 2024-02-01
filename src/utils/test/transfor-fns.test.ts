@@ -1,4 +1,4 @@
-import { createDeepCopy, getOnPath, updateInPath } from '../transform-fns';
+import { createDeepCopy, getOnPath, setOnPath } from '../transform-fns';
 
 describe('getOnPath', () => {
   const testObject = {
@@ -90,7 +90,7 @@ describe('updateInPath', () => {
   };
 
   it('updates the value for a valid nested path', () => {
-    const updatedObject = updateInPath({
+    const updatedObject = setOnPath({
       obj: testObject,
       path: ['level1', 'level2', 'value'],
       value: 'updated',
@@ -100,7 +100,7 @@ describe('updateInPath', () => {
 
   it('does not modify the original object', () => {
     const originalCopy = createDeepCopy(testObject);
-    updateInPath({
+    setOnPath({
       obj: testObject,
       path: ['level1', 'level2', 'value'],
       value: 'updated',
@@ -110,7 +110,7 @@ describe('updateInPath', () => {
 
   it('maintains immutability of the original object', () => {
     const originalCopy = createDeepCopy(testObject);
-    updateInPath({
+    setOnPath({
       obj: testObject,
       path: ['level1', 'level2', 'value'],
       value: 'updated',
@@ -120,7 +120,7 @@ describe('updateInPath', () => {
 
   it('adds new properties for valid paths that did not previously exist', () => {
     const originalCopy = createDeepCopy(testObject);
-    const updatedObject = updateInPath({
+    const updatedObject = setOnPath({
       obj: testObject,
       path: ['level1', 'level3', 'newProp'],
       value: 'newValue',
@@ -133,7 +133,7 @@ describe('updateInPath', () => {
 
   it('handles updates within arrays by specifying array indices in the path', () => {
     const originalCopy = createDeepCopy(testObject);
-    const updatedObject = updateInPath({
+    const updatedObject = setOnPath({
       obj: testObject,
       path: ['level1', 'level2', 'array', 1],
       value: 4,

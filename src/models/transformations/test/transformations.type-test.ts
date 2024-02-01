@@ -1,11 +1,11 @@
+import { assertType } from '../../../test-utils/type-testing';
 import {
   CamelToSnakeCase,
   ConvertFieldsToSnakeCase,
   ConvertNumberFieldsToObj,
   GitHubResponseWrapper,
   NumberToObject,
-} from '../types';
-import { assertType } from '../../../test-utils/type-testing';
+} from '../type-transfomrations';
 
 assertType<CamelToSnakeCase<'testStringHere'>>('test_string_here');
 assertType<NumberToObject<5>>({ totalCount: 5 });
