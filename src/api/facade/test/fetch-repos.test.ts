@@ -5,6 +5,7 @@ import { Spy } from '../../../test-utils/types';
 import { constructQueryString } from '../utils';
 import { anything } from '../../../test-utils/anything';
 import { searchOptionsMock } from '../../../models/mocks';
+import * as apiErrorModule from '../../../error-modules/api-error-module/api-error-module';
 
 jest.mock('../../apollo-client', () => ({
   client: { query: jest.fn() },
@@ -55,5 +56,14 @@ describe('fetchRepos with pagination', () => {
         before: paginationOptions.before,
       },
     });
+  });
+
+  it('if occurs passes the error to error module', async () => {
+    jest.spyOn(client, 'query').mockRejectedValue(new Error());
+    const spy = jest.spyOn(apiErrorModule, 'logAPIError');
+    try {
+      await fetchRepos({ ...searchOptionsMock });
+    } catch (e: unknown) {}
+    expect(spy).toHaveBeenCalled();
   });
 });

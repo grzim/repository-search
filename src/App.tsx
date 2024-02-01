@@ -5,6 +5,7 @@ import { RepositoriesContainer } from './components/RepositoriesContainer/Reposi
 import theme from './theme';
 import styled, { ThemeProvider } from 'styled-components';
 import { Theme, Typography } from '@mui/material';
+import { ErrorHandlingProvider } from './error-modules/ui-error-module/ErrorHandlingProvider';
 
 const HeaderContainer = styled.header<{ theme: Theme }>(({ theme }) => ({
   textAlign: 'center',
@@ -14,14 +15,16 @@ const HeaderContainer = styled.header<{ theme: Theme }>(({ theme }) => ({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <div data-testid={mainId}>
-        <HeaderContainer>
-          <Typography variant="h4" component="h1" color="primary">
-            Repository search
-          </Typography>
-        </HeaderContainer>
-        <RepositoriesContainer />
-      </div>
+      <ErrorHandlingProvider>
+        <div data-testid={mainId}>
+          <HeaderContainer>
+            <Typography variant="h4" component="h1" color="primary">
+              Repository search
+            </Typography>
+          </HeaderContainer>
+          <RepositoriesContainer />
+        </div>
+      </ErrorHandlingProvider>
     </ThemeProvider>
   );
 }

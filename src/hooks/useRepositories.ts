@@ -8,6 +8,7 @@ import {
   FetchPaginationOptions,
   PaginationResponse,
 } from '../models/api-related/pagination';
+import { useErrorHandling } from '../error-modules/ui-error-module/ErrorHandlingProvider';
 
 type UseRepositoriesOptions = FetchSearchOptions & FetchPaginationOptions;
 
@@ -18,6 +19,8 @@ export const useRepositories = (options: UseRepositoriesOptions) => {
     PaginationResponse & { repositoryCount: number }
   >(initialPaginationData);
   const [error, setError] = useState<string | null>(null);
+  const { handleError } = useErrorHandling();
+
   const prepareFetching = () => {
     setIsLoading(true);
     setError(null);
@@ -31,7 +34,7 @@ export const useRepositories = (options: UseRepositoriesOptions) => {
   };
 
   const fetchFail = () => {
-    console.error('Error fetching repositories:', error);
+    handleError('Error fetching repositories:', error);
     setError('Failed to fetch repositories.');
   };
 

@@ -12,6 +12,7 @@ import { FetchSearchOptions } from '../../models/ui-related/search';
 export const RepositoriesContainer = () => {
   const [searchParams, setSearchParams] =
     useState<FetchSearchOptions>(initialSearchState);
+
   const { goToNextPage, goToPreviousPage, paginationOptions } =
     usePaginationData(defaultNumberOfItemsPerPage);
 
@@ -19,6 +20,7 @@ export const RepositoriesContainer = () => {
     ...searchParams,
     ...paginationOptions,
   });
+
   return (
     <CenteredContainer>
       <Search
