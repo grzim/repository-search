@@ -12,7 +12,7 @@ const ErrorHandlingContext = createContext({
   handleError: console.error,
 });
 
-export const useErrorHandling = () => useContext(ErrorHandlingContext);
+export const useErrorContext = () => useContext(ErrorHandlingContext);
 
 export const ErrorHandlingProvider = ({ children }: PropsWithChildren) => {
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +37,7 @@ export const ErrorHandlingProvider = ({ children }: PropsWithChildren) => {
         open={!!error}
         autoHideDuration={alertAutoHideDuration}
         onClose={handleClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
         <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
           {error}

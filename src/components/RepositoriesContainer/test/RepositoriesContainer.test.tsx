@@ -3,8 +3,9 @@ import { RepositoriesContainer } from '../RepositoriesContainer';
 import * as RepositoriesListModule from '../../RepositoriesList/RepositoriesList';
 import React from 'react';
 import { searchInputId } from '../../../test-utils/data-test-ids';
-import { ThemeProvider } from 'styled-components';
-import { createTheme } from '@mui/material/styles';
+import { GlobalProvider } from '../../../GlobalProvider';
+
+jest.mock('../../../hooks');
 
 jest.mock('../../RepositoriesList/RepositoriesList', () => ({
   ...jest.requireActual('../../RepositoriesList/RepositoriesList'),
@@ -15,11 +16,10 @@ const RepoListComponent = RepositoriesListModule.RepositoriesList;
 
 describe('RepositoriesContainer', () => {
   it('does not rerender RepositoriesList when inputs in Search are modified', () => {
-    const theme = createTheme();
     const { getByTestId } = render(
-      <ThemeProvider theme={theme}>
+      <GlobalProvider>
         <RepositoriesContainer />
-      </ThemeProvider>,
+      </GlobalProvider>,
     );
 
     expect(RepoListComponent).toHaveBeenCalledTimes(1);
