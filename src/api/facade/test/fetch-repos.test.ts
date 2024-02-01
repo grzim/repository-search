@@ -58,12 +58,10 @@ describe('fetchRepos with pagination', () => {
     });
   });
 
-  it('if occurs passes the error to error module', async () => {
+  it('if error occurs it is passed to error module and propagated down', async () => {
     jest.spyOn(client, 'query').mockRejectedValue(new Error());
     const spy = jest.spyOn(apiErrorModule, 'logAPIError');
-    try {
-      await fetchRepos({ ...searchOptionsMock });
-    } catch (e: unknown) {}
+    await expect(fetchRepos({ ...searchOptionsMock })).rejects.toThrowError();
     expect(spy).toHaveBeenCalled();
   });
 });
