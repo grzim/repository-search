@@ -1,7 +1,7 @@
 import { createRange } from '../utils/transform-fns';
 import { Repository } from './ui-related/Repository';
 import { transformSingleRepo } from './transformations/transformations';
-import { RepositoryGetResponse } from './api-related/RepositoryGetResponse';
+import { APIGetResponse } from './api-related/APIGetResponse';
 import { GraphQLRepoResponse } from './api-related/RepositoryApiResponse';
 import { FetchSearchOptions } from './ui-related/search';
 import {
@@ -12,14 +12,14 @@ import {
 
 export const getGraphQLRepoResponseMocks = (
   numberOfItems: number,
-): RepositoryGetResponse<Repository> => ({
+): APIGetResponse<Repository> => ({
   pageInfo: {
     hasNextPage: true,
     hasPreviousPage: false,
     startCursor: 'startCursor',
     endCursor: 'endCursor',
   },
-  repositoryCount: numberOfItems,
+  totalCount: numberOfItems,
   edges: createRange(numberOfItems).map((_, i) => ({
     node: {
       name: `repo${i}`,

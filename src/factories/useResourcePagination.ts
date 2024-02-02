@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { PaginationCursor } from '../models/api-related/pagination';
 
-export const usePaginationData = (itemsPerPage: number) => {
+export const useResourcePagination = (itemsPerPage: number) => {
   const [endCursor, setEndCursor] = useState<PaginationCursor>(null);
   const [startCursor, setStartCursor] = useState<PaginationCursor>(null);
   const [cursorStack, setCursorStack] = useState<PaginationCursor[]>([]);

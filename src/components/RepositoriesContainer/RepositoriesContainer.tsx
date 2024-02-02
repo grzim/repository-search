@@ -1,44 +1,45 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { RepositoriesList } from '../RepositoriesList/RepositoriesList';
 import { Search } from '../Search/Search';
-import { useRepositories } from '../../hooks/useRepositories';
 import { initialSearchState } from '../../models/constants/initial-search-state';
 import { CenteredContainer, RepositoriesListContainer } from './styles';
 import { Pagination } from '../Pagination/Pagination';
-import { usePaginationData } from '../../hooks/usePaginationData';
+import { useErrorHandling } from '../../factories';
 import { defaultNumberOfItemsPerPage } from '../../models/constants/pagination';
-import { FetchSearchOptions } from '../../models/ui-related/search';
-import { useErrorHandling } from '../../hooks';
+import { Repository } from '../../models/ui-related/Repository';
+import { usePaginatedResource } from '../../factories/usePaginatedResource';
+import { fetchRepos } from '../../api/facade/fetch-repos';
+import { transformGQLRepositoriesResponse } from '../../models/transformations/transformations';
 
 export const RepositoriesContainer = () => {
-  const [searchParams, setSearchParams] =
-    useState<FetchSearchOptions>(initialSearchState);
-
-  const { goToNextPage, goToPreviousPage, paginationOptions } =
-    usePaginationData(defaultNumberOfItemsPerPage);
-
-  const { isLoading, repos, repositoryCount, endCursor, error } =
-    useRepositories({
-      ...searchParams,
-      ...paginationOptions,
-    });
-
+  const {
+    setSearchOptions,
+    goToNextPage,
+    goToPreviousPage,
+    isLoading,
+    data: repos,
+    totalCount,
+    error,
+  } = usePaginatedResource<Repository>({
+    fetchFn: fetchRepos,
+    transformFn: transformGQLRepositoriesResponse,
+  });
   useErrorHandling(error);
 
   return (
     <CenteredContainer>
       <Search
         initialState={initialSearchState}
-        onSearchTermChange={setSearchParams}
+        onSearchTermChange={setSearchOptions}
       />
       <RepositoriesListContainer>
         <RepositoriesList repos={repos} isLoading={isLoading} />
       </RepositoriesListContainer>
       <Pagination
         onPrev={goToPreviousPage}
-        onNext={() => endCursor && goToNextPage(endCursor)}
+        onNext={goToNextPage}
         totalPages={Math.ceil(
-          repositoryCount ? repositoryCount / defaultNumberOfItemsPerPage : 0,
+          totalCount ? totalCount / defaultNumberOfItemsPerPage : 0,
         )}
       />
     </CenteredContainer>

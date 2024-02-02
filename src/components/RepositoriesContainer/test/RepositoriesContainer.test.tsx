@@ -5,7 +5,7 @@ import React from 'react';
 import { searchInputId } from '../../../test-utils/data-test-ids';
 import { GlobalProvider } from '../../../GlobalProvider';
 
-jest.mock('../../../hooks');
+jest.mock('../../../factories');
 
 jest.mock('../../RepositoriesList/RepositoriesList', () => ({
   ...jest.requireActual('../../RepositoriesList/RepositoriesList'),

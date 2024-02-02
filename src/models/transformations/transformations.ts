@@ -1,5 +1,8 @@
 import { Repository } from '../ui-related/Repository';
-import { GitHubResponseTransformation } from './type-transfomrations';
+import {
+  APIModelToUIModelTransform,
+  GitHubResponseTransformation,
+} from './type-transfomrations';
 import { GraphQLRepoResponse } from '../api-related/RepositoryApiResponse';
 
 export const transformSingleRepo: GitHubResponseTransformation<Repository> = (
@@ -11,6 +14,7 @@ export const transformSingleRepo: GitHubResponseTransformation<Repository> = (
   forks: data.node.forks.totalCount,
 });
 
-export const transformGQLRepositoriesResponse = (
-  graphQLRepositoriesResponse: GraphQLRepoResponse[],
-) => graphQLRepositoriesResponse.map(transformSingleRepo);
+export const transformGQLRepositoriesResponse: APIModelToUIModelTransform<
+  Repository
+> = (graphQLRepositoriesResponse: GraphQLRepoResponse[]) =>
+  graphQLRepositoriesResponse.map(transformSingleRepo);

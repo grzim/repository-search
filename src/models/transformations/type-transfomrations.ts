@@ -30,3 +30,7 @@ type Edge<T> = {
 export type GitHubResponseWrapper<T> = Edge<
   ConvertNumberFieldsToObj<ConvertFieldsToSnakeCase<T>>
 >;
+
+export type APIModelToUIModelTransform<UIModel> = (
+  items: GitHubResponseWrapper<UIModel>[],
+) => UIModel[];

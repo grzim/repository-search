@@ -1,8 +1,8 @@
 import { GitHubResponseWrapper } from '../transformations/type-transfomrations';
 import { PaginationResponse } from './pagination';
 
-export type RepositoryGetResponse<T> = {
+export type APIGetResponse<T> = {
   edges: GitHubResponseWrapper<T>[];
-  pageInfo: PaginationResponse;
-  repositoryCount: number;
+  pageInfo?: PaginationResponse;
+  totalCount: number;
 };

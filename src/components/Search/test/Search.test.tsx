@@ -143,7 +143,10 @@ describe('SearchComponent', () => {
       <ThemeProvider theme={theme}>
         <Search
           onSearchTermChange={mockOnSearchTermChange}
-          initialState={{ ...initialSearchState, searchTerm: newSearchTerm }} // Use the last state as the new initial state
+          initialState={{
+            ...initialSearchState,
+            searchTerm: newSearchTerm,
+          }} // Use the last state as the new initial state
         />
       </ThemeProvider>,
     );

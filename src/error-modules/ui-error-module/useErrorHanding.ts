@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useErrorContext } from '../error-modules/ui-error-module/ErrorHandlingProvider';
+import { useErrorContext } from './ErrorHandlingProvider';
 
 export const useErrorHandling = (error: string | null) => {
   const { handleError } = useErrorContext();

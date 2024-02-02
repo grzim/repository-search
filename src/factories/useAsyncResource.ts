@@ -1,21 +1,28 @@
 import { useEffect, useState } from 'react';
-import { fetchRepos } from '../api/facade/fetch-repos';
-import { Repository } from '../models/ui-related/Repository';
-import { transformGQLRepositoriesResponse } from '../models/transformations/transformations';
 import { initialPaginationData } from '../models/constants/pagination';
 import { FetchSearchOptions } from '../models/ui-related/search';
 import {
   FetchPaginationOptions,
   PaginationResponse,
 } from '../models/api-related/pagination';
+import { FetchData } from '../models/api-related/FetchData';
+import { APIModelToUIModelTransform } from '../models/transformations/type-transfomrations';
 
-type UseRepositoriesOptions = FetchSearchOptions & FetchPaginationOptions;
+type UseAsyncResourceOptions = FetchSearchOptions & FetchPaginationOptions;
 
-export const useRepositories = (options: UseRepositoriesOptions) => {
-  const [repos, setRepos] = useState<Repository[]>([]);
+export const useAsyncResource = <DataType>({
+  transformFn,
+  fetchFn,
+  options,
+}: {
+  fetchFn: FetchData;
+  transformFn: APIModelToUIModelTransform<DataType>;
+  options: UseAsyncResourceOptions;
+}) => {
+  const [data, setData] = useState<DataType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [paginationData, setPaginationData] = useState<
-    PaginationResponse & { repositoryCount: number }
+    PaginationResponse & { totalCount: number }
   >(initialPaginationData);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,10 +32,9 @@ export const useRepositories = (options: UseRepositoriesOptions) => {
   };
 
   const fetching = async () => {
-    const { edges, pageInfo, repositoryCount } =
-      await fetchRepos<Repository>(options);
-    setRepos(transformGQLRepositoriesResponse(edges));
-    setPaginationData({ ...pageInfo, repositoryCount });
+    const { edges, pageInfo, totalCount } = await fetchFn<DataType>(options);
+    setData(transformFn(edges));
+    if (pageInfo) setPaginationData({ ...pageInfo, totalCount });
   };
 
   const fetchFail = () => {
@@ -55,5 +61,5 @@ export const useRepositories = (options: UseRepositoriesOptions) => {
     fetchData();
   }, [JSON.stringify(options)]);
 
-  return { isLoading, repos, ...paginationData, error };
+  return { isLoading, data, ...paginationData, error };
 };

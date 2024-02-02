@@ -1,10 +1,10 @@
 import React from 'react';
 import { act, render } from '@testing-library/react';
-import { usePaginationData } from '../usePaginationData';
+import { useResourcePagination } from '../useResourcePagination';
 
 function TestComponent({ itemsPerPage }: { itemsPerPage: number }) {
   const { goToNextPage, goToPreviousPage, paginationOptions } =
-    usePaginationData(itemsPerPage);
+    useResourcePagination(itemsPerPage);
 
   return (
     <div>
@@ -26,7 +26,7 @@ function TestComponent({ itemsPerPage }: { itemsPerPage: number }) {
   );
 }
 
-describe('usePaginationData within TestComponent', () => {
+describe('useResourcePagination within TestComponent', () => {
   const itemsPerPage = 10;
 
   it('initializes with correct default values', () => {
