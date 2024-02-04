@@ -14,7 +14,7 @@ export const handleChange = <State extends Record<string, unknown>>(
 ) => {
   const target = event.target;
   const name = target.name;
-  const path = name.split('.');
+  const path = name.split(`.`);
   const value = getOnPath({ obj: state, path });
   const newValue =
     target instanceof HTMLSelectElement && target.multiple

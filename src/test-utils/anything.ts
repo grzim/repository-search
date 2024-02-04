@@ -4,7 +4,7 @@ const handler: ProxyHandler<Record<string, unknown>> = {
       ? target[prop as keyof typeof target]
       : new Proxy({}, handler),
   set: () => {
-    throw new Error('Setting properties on this object is not allowed.');
+    throw new Error(`Setting properties on this object is not allowed.`);
   },
 };
 

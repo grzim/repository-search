@@ -1,5 +1,5 @@
 export const isObject = <T>(value: T): value is T & Record<string, unknown> => {
-  return value instanceof Object && typeof value === 'object';
+  return value instanceof Object && typeof value === `object`;
 };
 export const areObjectsEqual = <T extends Record<string, unknown>>({
   obj1,

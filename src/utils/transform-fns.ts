@@ -3,7 +3,7 @@ export const createRange = (size: number) =>
 
 export const createDeepCopy = (obj: object) => {
   // Fallback to JSON methods if structuredClone is not available
-  return typeof structuredClone === 'function'
+  return typeof structuredClone === `function`
     ? structuredClone(obj)
     : JSON.parse(JSON.stringify(obj));
 };
@@ -26,7 +26,7 @@ export const getOnPath = <T, U = unknown>({
 }): U =>
   path.reduce<unknown>((acc, key) => {
     const hasProp =
-      acc && typeof acc === 'object' && ((key in acc) as unknown as object);
+      acc && typeof acc === `object` && ((key in acc) as unknown as object);
     return hasProp ? (acc as Record<PropertyKey, unknown>)[key] : undefined;
   }, obj) as U;
 
@@ -70,6 +70,3 @@ export const removeEmpty = ((obj) => {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ToVoid = <T = any>(...x: T[]) => void;
-// eslint-disable-next-line
-// @ts-ignore
-export const toVoid: ToVoid = (x): void => (x, undefined); // comma expression for the typing only

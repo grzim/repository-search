@@ -1,6 +1,6 @@
 import { ThemeProvider } from 'styled-components';
 import theme from './theme';
-import { ErrorHandlingProvider } from './error-modules/ui-error-module/ErrorHandlingProvider';
+import { ErrorHandlingProvider } from '@src/domains/errors/ui-error-module/ErrorHandlingProvider';
 import React, { PropsWithChildren } from 'react';
 
 export const GlobalProvider = ({ children }: PropsWithChildren) => (

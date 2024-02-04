@@ -1,4 +1,5 @@
 {
+  "extends": "./tsconfig.path.json",
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
@@ -22,7 +23,9 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "jsx": "react",
-    "types": ["jest"]
+    "types": ["jest"],
+    "baseUrl": ".",
+
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

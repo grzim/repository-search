@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@src/*": ["src/*"],
+      "@api/*": ["src/domains/api/*"],
+      "@errors-api/*": ["src/domains/errors/api-error-module/*"],
+      "@errors-ui/*": ["src/domains/errors/ui-error-module/*"],
+      "@ui-factories": ["src/domains/repository-search-ui/factories"],
+      "@ui-factories/*": ["src/domains/repository-search-ui/factories/*"],
+      "@ui-adapters/*": ["src/domains/repository-search-ui/adapters/*"],
+      "@ui-components/*": ["src/domains/repository-search-ui/components/*"],
+      "@ui-async-models/*": ["src/domains/repository-search-ui/models/async-models/*"],
+      "@ui-constants/*": ["src/domains/repository-search-ui/models/constants/*"],
+      "@ui-entities/*": ["src/domains/repository-search-ui/models/entities/*"],
+      "@ui-transformations/*": ["src/domains/repository-search-ui/models/transformations/*"],
+      "@ui-value-objects/*": ["src/domains/repository-search-ui/models/value-objects/*"],
+      "@ui/*": ["src/domains/repository-search-ui/*"],
+      "@test/*": ["src/test-utils/*"],
+      "@utils/*": ["src/utils/*"]
+    }
+  }
+}

@@ -6,7 +6,7 @@ const theme = createTheme({
 
 export const themeVariables = {
   spacingBig: `${theme.spacing(2.5)}`,
-  background: '#faf9fd',
+  background: `#faf9fd`,
 };
 
 export default theme;
