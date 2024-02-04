@@ -1,2 +1,3 @@
 export * from './useAsyncResource';
-export * from './utils/useResourcePagination';
+export * from './usePaginatedResource';
+export * from './useCursorBasedPagination';

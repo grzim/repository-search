@@ -5,4 +5,5 @@ export type PaginationOptions = {
   before?: PaginationCursor;
   first?: number | null;
   last?: number | null;
+  endCursor?: PaginationCursor;
 };

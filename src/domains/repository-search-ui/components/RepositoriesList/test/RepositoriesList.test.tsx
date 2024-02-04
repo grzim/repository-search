@@ -6,6 +6,7 @@ import { act } from 'react-dom/test-utils';
 import { getRepositoriesMock } from '@test/mocks';
 import { Repository } from '@ui/models/entities/Repository';
 import { loaderId } from '@src/test-utils';
+
 jest.mock(`@ui-adapters/api/`, () => ({
   fetchGqlGithubRepos: jest.fn(),
 }));

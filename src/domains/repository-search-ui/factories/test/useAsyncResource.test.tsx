@@ -32,7 +32,7 @@ describe(`${useAsyncResource.name} hook`, () => {
     const { isLoading, data, error } = useAsyncResource({
       fetchFn,
       transformFn: transformGQLRepositoriesResponse,
-      options: { ...searchOptionsMock, searchTerm },
+      searchOptions: { ...searchOptionsMock, searchTerm },
     });
 
     return (

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { PaginationCursor } from '@ui-value-objects/pagination';
 
-export const useResourcePagination = (itemsPerPage: number) => {
+export const useCursorBasedPagination = (itemsPerPage: number) => {
   const [endCursor, setEndCursor] = useState<PaginationCursor>(null);
   const [startCursor, setStartCursor] = useState<PaginationCursor>(null);
   const [cursorStack, setCursorStack] = useState<PaginationCursor[]>([]);
@@ -22,11 +22,9 @@ export const useResourcePagination = (itemsPerPage: number) => {
   };
 
   return {
-    paginationOptions: {
-      first: itemsPerPage,
-      after: endCursor,
-      before: startCursor,
-    },
+    first: itemsPerPage,
+    after: endCursor,
+    before: startCursor,
     goToNextPage,
     goToPreviousPage,
   };

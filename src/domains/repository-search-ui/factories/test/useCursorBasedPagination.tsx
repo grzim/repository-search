@@ -1,10 +1,10 @@
 import React from 'react';
 import { act, render } from '@testing-library/react';
-import { useResourcePagination } from '@ui-factories';
+import { useCursorBasedPagination } from '@ui-factories';
 
 function TestComponent({ itemsPerPage }: { itemsPerPage: number }) {
-  const { goToNextPage, goToPreviousPage, paginationOptions } =
-    useResourcePagination(itemsPerPage);
+  const { goToNextPage, goToPreviousPage, first, after, before } =
+    useCursorBasedPagination(itemsPerPage);
 
   return (
     <div>
@@ -18,15 +18,15 @@ function TestComponent({ itemsPerPage }: { itemsPerPage: number }) {
         Previous Page
       </button>
       <div data-testid="fetch-options">
-        First: {paginationOptions.first}, After:{` `}
-        {String(paginationOptions.after)}, Before:{` `}
-        {String(paginationOptions.before)}
+        First: {first}, After:{` `}
+        {String(after)}, Before:{` `}
+        {String(before)}
       </div>
     </div>
   );
 }
 
-describe(`${useResourcePagination} within TestComponent`, () => {
+describe(`${useCursorBasedPagination.name} within TestComponent`, () => {
   const itemsPerPage = 10;
 
   it(`initializes with correct default values`, () => {

@@ -22,8 +22,6 @@ jest.mock(`@ui-adapters/api/fetch-gql-github-repos`, () => ({
   fetchGqlGithubRepos: jest.fn(),
 }));
 
-jest.mock(`../../factories`);
-
 describe(`Integration between ${Search.name} and ${RepositoriesList.name}`, () => {
   it(`does not rerender ${RepositoriesList.name} when inputs in ${Search.name} component are modified`, () => {
     const RepoListComponent = jest.spyOn(

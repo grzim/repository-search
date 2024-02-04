@@ -1,30 +1,36 @@
 import { useEffect, useState } from 'react';
 import { FetchSearchOptions } from '@ui/models/value-objects/search';
-import { PaginationResponse } from '@ui-value-objects/pagination';
 import { FetchData } from '@ui/models/services/FetchData';
 import { APIModelToUIModelTransform } from 'src/domains/repository-search-ui/models/services';
 import { PaginationOptions } from '@ui/models/entities';
-import { AsyncResource } from '@ui/models/aggregations/AsyncResource';
-import { PaginatedResource } from '@ui/models/aggregations/PaginatedResource';
+import { AsyncResource, Metadata } from '@ui/models/aggregations/AsyncResource';
 
-type UseAsyncResourceOptions = FetchSearchOptions & PaginationOptions;
-
-export const useAsyncResource = <DataType>({
+type UseAsyncResource = <DataType>(props: {
+  fetchFn: FetchData;
+  transformFn: APIModelToUIModelTransform<DataType>;
+  searchOptions: FetchSearchOptions;
+  paginationOptions?: PaginationOptions;
+}) => AsyncResource<DataType>;
+export const useAsyncResource: UseAsyncResource = <DataType>({
   transformFn,
   fetchFn,
-  options,
+  searchOptions,
+  paginationOptions,
 }: {
   fetchFn: FetchData;
   transformFn: APIModelToUIModelTransform<DataType>;
-  options: UseAsyncResourceOptions;
-}): AsyncResource<DataType> | PaginatedResource<DataType> => {
+  searchOptions: FetchSearchOptions;
+  paginationOptions?: PaginationOptions;
+}) => {
   const [data, setData] = useState<DataType[]>([]);
+  const [metadata, setMetadata] = useState<Metadata>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [paginationData, setPaginationData] = useState<
-    PaginationResponse & { totalCount: number }
-  >();
   const [error, setError] = useState<string | null>(null);
 
+  const options = {
+    ...searchOptions,
+    ...paginationOptions,
+  };
   const prepareFetching = () => {
     setIsLoading(true);
     setError(null);
@@ -33,8 +39,7 @@ export const useAsyncResource = <DataType>({
   const fetching = async () => {
     const { edges, pageInfo, totalCount } = await fetchFn<DataType>(options);
     setData(transformFn(edges));
-    if (pageInfo && typeof totalCount === `number`)
-      setPaginationData({ ...pageInfo, totalCount });
+    if (pageInfo && totalCount) setMetadata({ ...pageInfo, totalCount });
   };
 
   useEffect(() => {
@@ -60,8 +65,7 @@ export const useAsyncResource = <DataType>({
   return {
     isLoading,
     data,
-    ...paginationData,
+    ...metadata,
     error,
-    clearError: () => setError(null),
   };
 };

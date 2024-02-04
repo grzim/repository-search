@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { RepositoriesList } from '@ui-components/RepositoriesList';
-import { Search } from '../Search/Search';
 import { CenteredContainer, RepositoriesListContainer } from './styles';
 import { Pagination } from '../Pagination/Pagination';
 import {
@@ -13,10 +12,25 @@ import { getGithubReposAdapter } from '@ui-adapters/api/get-github-repos';
 import { useWithErrorHandling } from '@errors-ui/useWithErrorHandling';
 import { FetchSearchOptions } from '@ui-value-objects/search';
 import { errors } from '@ui/errors';
+import { useAsyncResource, useCursorBasedPagination } from '@ui-factories';
+import { Search } from '@ui-components/Search';
 
 export const RepositoriesContainer = () => {
   const [searchOptions, setSearchOptions] =
     useState<FetchSearchOptions>(initialSearchState);
+
+  const paginationOptions = useCursorBasedPagination(
+    defaultNumberOfItemsPerPage,
+  );
+
+  const asyncResource = useAsyncResource({
+    ...getGithubReposAdapter,
+    searchOptions,
+    paginationOptions,
+  });
+  const paginatedResource = useWithErrorHandling(
+    usePaginatedResource<Repository>({ paginationOptions, asyncResource }),
+  );
 
   const {
     goToNextPage,
@@ -25,13 +39,8 @@ export const RepositoriesContainer = () => {
     data: repos,
     totalCount,
     error,
-  } = useWithErrorHandling(
-    usePaginatedResource<Repository>({
-      ...getGithubReposAdapter,
-      searchOptions,
-    }),
-  );
-  console.log({ error });
+  } = paginatedResource;
+
   return (
     <CenteredContainer>
       <Search
