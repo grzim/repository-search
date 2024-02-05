@@ -12,5 +12,4 @@ export const client = new ApolloClient({
     Authorization: `Bearer ${token}`,
   },
 });
-
 client.query = withErrorLog(client.query);
