@@ -5,6 +5,8 @@ import { getGraphQLRepoResponseMocks, searchOptionsMock } from '@test/mocks';
 import { Spy } from '@test/types';
 import { FetchData } from '@ui/models/services';
 import { transformGQLRepositoriesResponse } from '@ui-adapters/api';
+import { act } from 'react-dom/test-utils';
+import { errors } from '@ui/errors';
 
 jest.mock(`@ui-adapters/api/fetch-gql-github-repos`, () => ({
   fetchGqlGithubRepos: jest.fn(),
@@ -46,24 +48,31 @@ describe(`${useAsyncResource.name} hook`, () => {
 
   it(`starts with isLoading true and empty data`, async () => {
     const { getByTestId } = render(<TestComponent searchTerm="test" />);
-
-    expect(getByTestId(`loading-state`).textContent).toBe(`true`);
+    await waitFor(() => {
+      expect(getByTestId(`loading-state`).textContent).toBe(`true`);
+    });
     expect(getByTestId(`data-count`).textContent).toBe(`0`);
   });
 
   it(`sets isLoading to false and updates data after fetch`, async () => {
-    const { getByTestId } = render(<TestComponent searchTerm="test" />);
+    let getByTestId: (x: string) => HTMLElement;
+    await act(async () => {
+      const { getByTestId: gbti } = render(<TestComponent searchTerm="test" />);
+      getByTestId = gbti;
+    });
 
     await waitFor(() => {
       expect(getByTestId(`data-count`).textContent).toBe(
         mockedResponse.edges.length.toString(),
       );
+    });
+    await waitFor(() => {
       expect(getByTestId(`loading-state`).textContent).toBe(`false`);
     });
   });
 
   it(`handles errors and sets the error state`, async () => {
-    const errorMessage = `Failed to fetch repositories.`;
+    const errorMessage = errors.maximumRequests;
     fetchRepos.mockRejectedValueOnce(new Error(errorMessage));
 
     const { getByTestId } = render(<TestComponent searchTerm="test" />);

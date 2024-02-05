@@ -4,6 +4,7 @@ import { FetchData } from '@ui/models/services/FetchData';
 import { APIModelToUIModelTransform } from 'src/domains/repository-search-ui/models/services';
 import { PaginationOptions } from '@ui/models/entities';
 import { AsyncResource, Metadata } from '@ui/models/aggregations/AsyncResource';
+import { errors } from '@ui/errors';
 
 type UseAsyncResource = <DataType>(props: {
   fetchFn: FetchData;
@@ -51,9 +52,16 @@ export const useAsyncResource: UseAsyncResource = <DataType>({
       try {
         await fetching();
       } catch (error: unknown) {
+        const errorParsed = String(error);
         const message =
-          error instanceof Error ? String(error).replace(`Error: `, ``) : error;
-        setError(String(message) || `Cannot fetch data`);
+          error instanceof Error
+            ? errorParsed.replace(`Error: `, ``)
+            : String(error);
+        setError(
+          Object.values(errors).includes(message)
+            ? message
+            : errors.defaultWhenRequestFail,
+        );
       } finally {
         setIsLoading(false);
       }
