@@ -14,7 +14,7 @@ export const logAPIError = ({
 };
 
 // eslint-disable-next-line
-export const withErrorLog = <A extends (x: any) => Promise<any>>(fn: A): A => {
+export const withErrorLog = <B, A extends (x: any) => Promise<B>>(fn: A): A => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   return (...x) =>

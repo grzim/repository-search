@@ -8,12 +8,13 @@ import {
 } from '@ui/models/constants';
 import { Repository } from '@ui/models/entities/Repository';
 import { usePaginatedResource } from '@ui-factories/usePaginatedResource';
-import { getGithubReposAdapter } from '@ui-adapters/api/get-github-repos';
+import { gqlGithubConnectorData } from '@ui-adapters/api/gql-github-connector-data';
 import { useWithErrorHandling } from '@errors-ui/useWithErrorHandling';
 import { FetchSearchOptions } from '@ui-value-objects/search';
 import { errors } from '@ui/errors';
 import { useAsyncResource, useCursorBasedPagination } from '@ui-factories';
 import { Search } from '@ui-components/Search';
+import { repositoryNameTransformation } from '@ui-components/RepositoriesContainer/utils/repository-name-transformation';
 
 export const RepositoriesContainer = () => {
   const [searchOptions, setSearchOptions] =
@@ -23,15 +24,18 @@ export const RepositoriesContainer = () => {
     defaultNumberOfItemsPerPage,
   );
 
-  const asyncResource = useAsyncResource({
-    ...getGithubReposAdapter,
-    searchOptions,
-    paginationOptions,
-  });
-  const paginatedResource = useWithErrorHandling(
-    usePaginatedResource<Repository>({ paginationOptions, asyncResource }),
+  const asyncResource = useWithErrorHandling(
+    useAsyncResource({
+      ...gqlGithubConnectorData,
+      searchOptions,
+      paginationOptions,
+    }),
   );
 
+  const paginatedResource = usePaginatedResource<Repository>({
+    paginationOptions,
+    asyncResource,
+  });
   const {
     goToNextPage,
     goToPreviousPage,
@@ -48,7 +52,11 @@ export const RepositoriesContainer = () => {
         onSearchTermChange={setSearchOptions}
       />
       <RepositoriesListContainer>
-        <RepositoriesList repos={repos} isLoading={isLoading} />
+        <RepositoriesList
+          repos={repos}
+          isLoading={isLoading}
+          nameTransform={repositoryNameTransformation(searchOptions)}
+        />
       </RepositoriesListContainer>
       <Pagination
         isNextButtonDisabled={error === errors.maximumRequests || isLoading}

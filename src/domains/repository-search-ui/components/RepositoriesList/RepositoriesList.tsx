@@ -1,5 +1,5 @@
 import { Repository } from '@ui/models/entities/Repository';
-import React, { useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useState } from 'react';
 import {
   CircularProgress,
   Link,
@@ -16,10 +16,13 @@ import { loaderId, tableId } from '@src/test-utils';
 export type RepositoriesListProps = {
   repos: Repository[];
   isLoading: boolean;
+  nameTransform?: (repo: Repository) => ReactNode;
 };
+
 export const getStargazers = (repo: Repository) => `🌟 ` + repo.stargazers;
 export const getForks = (repo: Repository) => `🍴 ` + repo.forks;
 export const RepositoriesList: React.FC<RepositoriesListProps> = ({
+  nameTransform = (repo: Repository) => repo.name,
   repos,
   isLoading,
 }) => {
@@ -56,7 +59,7 @@ export const RepositoriesList: React.FC<RepositoriesListProps> = ({
                 }}
               >
                 <Link href={repo.url} target="_blank" rel="noopener noreferrer">
-                  {repo.name}
+                  {nameTransform(repo)}
                 </Link>
               </TableCell>
               <TableCell align="right"> {getStargazers(repo)} </TableCell>

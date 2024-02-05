@@ -15,7 +15,6 @@ export const Search = ({ onSearchTermChange, initialState }: SearchProps) => {
   const [state, setState] = useState<FetchSearchOptions>(initialState);
   const [lastSearchState, setLastSearchState] =
     useState<FetchSearchOptions>(initialState);
-
   const handleInputChange = (
     event:
       | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>

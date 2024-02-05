@@ -1,5 +1,5 @@
 import { defaultToWhenEmpty, getOnPath, setOnPath } from './transform-fns';
-import { ChangeEvent } from 'react';
+import React, { ChangeEvent, ReactNode } from 'react';
 import { SelectChangeEvent } from '@mui/material';
 
 export const getOptions = (
@@ -26,3 +26,26 @@ export const handleChange = <State extends Record<string, unknown>>(
 
   return setOnPath({ obj: state, path, value: newValue }) as State;
 };
+
+export const replaceWithNode = ({
+  fullText,
+  partToReplaceWithNode,
+  node,
+}: {
+  fullText: string;
+  partToReplaceWithNode: string;
+  node: ReactNode;
+}) =>
+  fullText.split(partToReplaceWithNode).reduce(
+    (acc, item, i) =>
+      i === 0 ? (
+        <>{item}</>
+      ) : (
+        <>
+          {acc}
+          {node}
+          {item}
+        </>
+      ),
+    <></>,
+  );

@@ -23,6 +23,9 @@ export const REPOSITORIES_DETAILS_QUERY = gql`
           ... on Repository {
             name
             url
+            owner {
+              login
+            }
             stargazers {
               totalCount
             }

@@ -10,7 +10,7 @@ describe(constructQueryString.name, () => {
         direction: `desc`,
       },
     });
-    expect(queryString).toBe(`name:react sort:stars-desc`);
+    expect(queryString).toBe(`"react" in:name sort:stars-desc`);
   });
 
   it(`constructs a query string for multiple search fields and custom sort order`, () => {
@@ -22,6 +22,6 @@ describe(constructQueryString.name, () => {
         direction: `asc`,
       },
     });
-    expect(queryString).toBe(`name:vue description:vue sort:updated_at-asc`);
+    expect(queryString).toBe(`"vue" in:name,description sort:updated_at-asc`);
   });
 });
