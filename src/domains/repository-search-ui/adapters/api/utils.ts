@@ -9,8 +9,6 @@ export const constructQueryString = ({
   searchIn = [`name`, `description`] as SearchInOptions[],
   orderBy = { field: `stars`, direction: `desc` } as OrderBy,
 }: FetchSearchOptions): string => {
-  const searchInQuery = searchIn
-    .map((field) => `${field}:${searchTerm}`)
-    .join(` `);
+  const searchInQuery = `"${searchTerm}" in:${searchIn.join(`,`)}`;
   return `${searchInQuery} sort:${orderBy.field}-${orderBy.direction}`;
 };
