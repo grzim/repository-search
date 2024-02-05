@@ -1,5 +1,14 @@
 # Repository List
 
+## Run with Docker
+
+- to build the app:
+
+`docker build -t repository-search .`
+- to start the app 
+
+`docker run -e REACT_APP_GITHUB_TOKEN=yourGithubToken repository-search`
+
 ## Overview
 
 The project aim is to showcase DDD (Domain-Driven Design) principles within a React application.
@@ -52,7 +61,7 @@ UI error handling requires wrapping the application with an Error Module Provide
 
 ```ts
 const props = useWithErrorHandling(
-  usePaginatedResource<Repository>(getGithubReposAdapter),
+  usePaginatedResource<Repository>(gqlGithubConnectorData),
 );
 ```
 ## Tests
