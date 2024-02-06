@@ -38,7 +38,7 @@ This domain is designed to manage errors, consisting of two subdomains:
 
 #### API Error Subdomain
 
-API errors are handled by wrapping asynchronous functions with `useWithErrorHandling`, which logs errors without changing the function's original behavior.
+API errors are handled by wrapping asynchronous functions with `withErrorLog`, which logs errors without changing the function's original behavior.
 
 ```ts
 export const client = new ApolloClient({
@@ -57,7 +57,7 @@ UI error handling requires wrapping the application with an Error Module Provide
 ```tsx
  <ErrorHandlingProvider>{children}</ErrorHandlingProvider>
  ```
-`useWithErrorHandling` is used similarly to handle errors, managing side effects like displaying errors to the user.
+`useWithErrorHandling` is used similarly to `handleErrors`, managing side effects like displaying errors to the user.
 
 ```ts
 const props = useWithErrorHandling(
@@ -130,6 +130,11 @@ const handler: ProxyHandler<Record<string, unknown>> = {
 export const anything = new Proxy<Record<string, unknown>>({}, handler) as any;
 
 ```
+To preserve the type:
+
+```
+export const getMocked<T extends Record<string, unknown>> = () => new Proxy<Record<string, unknown>>({}, handler) as T;
+```
 
 ## Models
 
@@ -138,18 +143,21 @@ The application utilizes a variety of models:
 - **entities** - primary objects of the domain
 - **value objects** - represent descriptive aspects of the domain
 - **services** - process domain-specific business rules
-- **repositories** - shapes retrieved from the data storage
+- **repositories** - data retrieved from the storage
 - **aggregations** - a cluster of domain objects that can be treated as a single unit
 
 ## Factories
 
-React hooks are used as factories to aggregate data for asynchronous resources, streamlining data management within the application.
-Three factories are implemented:  one for configuring pagination mechanisms, another for creating resources with asynchronous data, and a third dedicated to constructing paginated asynchronous resources. Functionality and scalability is achieved through the inversion of control paradigm.
+React hooks are used as factories to spawn objects representing asynchronous resources, streamlining data management within the application.
+
+Three factories are implemented: one for configuring pagination mechanisms, another for creating resources with asynchronous data, and a third dedicated to constructing paginated asynchronous resources. Functionality and scalability are achieved through the inversion of the control paradigm. 
+
+AsynchResource requires an API adapter as a dependency, whereas a PaginatedResource requires a CursorBasedPagination object describing how the pagination works and AsynchResource, which will be controlled with the pagination. Thanks to this, any kind of pagination mechanism could be used with any kind of asynchronous resource as long as interfaces match.
 
 ## Separation of concerns
 
 The project ensures a clear separation of concerns, with pure data transformations and decoupled application components.
-In /utils folder pure functions (not associated with any domain) are stored, used later in the application
+In `/utils` folder pure functions (not associated with any domain) are stored, used later in the application
 
 ## Typing
 
@@ -185,7 +193,7 @@ export const themeVariables = {
 
 ## Security
 
-In order not to use API token directly in the frontend code, token is stored in `.env.local` file
+In order not to use API token directly in the frontend code, a token is stored as an env variable. It can be provided in `.env.local` file
 
 ## Available Scripts
 
