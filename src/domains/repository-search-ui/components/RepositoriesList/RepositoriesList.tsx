@@ -44,7 +44,6 @@ export const RepositoriesList: React.FC<RepositoriesListProps> = ({
     );
 
   if (repos.length === 0) return <Typography>{noDataText}</Typography>;
-
   return (
     <TableContainer data-testid={tableId} component={Paper}>
       <RepoView repos={repos} />

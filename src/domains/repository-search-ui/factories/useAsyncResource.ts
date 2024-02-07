@@ -50,7 +50,8 @@ export const useAsyncResource: UseAsyncResource = <DataType>({
     const { edges, pageInfo, totalCount } = await fetchFn<DataType>(options);
     if (isMounted) {
       setData(transformFn(edges));
-      if (pageInfo && totalCount) setMetadata({ ...pageInfo, totalCount });
+      if (Number.isInteger(totalCount) && pageInfo)
+        setMetadata({ ...pageInfo, totalCount });
     }
   };
 
