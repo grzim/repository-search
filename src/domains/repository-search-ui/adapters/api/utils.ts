@@ -1,14 +1,11 @@
-import {
-  FetchSearchOptions,
-  OrderBy,
-  SearchInOptions,
-} from '@ui/models/value-objects/search';
+import { OrderBy, SearchInOptions } from '@ui/models/value-objects/search';
+import { SearchOptions } from '@ui/models/entities';
 
 export const constructQueryString = ({
   searchTerm,
   searchIn = [`name`, `description`] as SearchInOptions[],
   orderBy = { field: `stars`, direction: `desc` } as OrderBy,
-}: FetchSearchOptions): string => {
+}: SearchOptions): string => {
   const searchInQuery = `"${searchTerm}" in:${searchIn.join(`,`)}`;
   return `${searchInQuery} sort:${orderBy.field}-${orderBy.direction}`;
 };

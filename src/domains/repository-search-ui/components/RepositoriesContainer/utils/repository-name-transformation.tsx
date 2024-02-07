@@ -1,7 +1,7 @@
-import { Repository } from '@ui/models/entities';
+import { Repository, SearchOptions } from '@ui/models/entities';
 import { replaceWithNode } from '@src/utils';
-import React from 'react';
-import { FetchSearchOptions } from '@ui-value-objects/search';
+import React, { ReactNode } from 'react';
+import { RepoWithJsx } from '@ui-components/RepositoriesList/utils';
 
 const composeDisplayedName = ({
   owner,
@@ -23,8 +23,27 @@ const boldSearchedPhrase = ({
     partToReplaceWithNode: searchTerm,
   });
 
-export const repositoryNameTransformation =
-  (searchOptions: FetchSearchOptions) => (repo: Repository) =>
-    searchOptions.searchIn.includes(`name`)
-      ? boldSearchedPhrase({ ...repo, ...searchOptions })
-      : composeDisplayedName(repo);
+export const repositoryNameTransformation = (
+  props: RepoWithJsx & SearchOptions,
+): ReactNode =>
+  (props.searchIn.includes(`name`) ? boldSearchedPhrase : composeDisplayedName)(
+    props,
+  );
+
+export const repositoriesNameTransformation = ({
+  repos,
+  searchOptions,
+}: {
+  repos: Repository[];
+  searchOptions: SearchOptions;
+}): RepoWithJsx[] =>
+  repos.map(
+    (repo): RepoWithJsx =>
+      ({
+        ...repo,
+        name: repositoryNameTransformation({
+          ...repo,
+          ...searchOptions,
+        }),
+      }) as RepoWithJsx,
+  );

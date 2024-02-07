@@ -13,6 +13,9 @@ export const CenteredContainer = styled.div<{ theme: Theme }>(({ theme }) => ({
   margin: `auto`,
   maxWidth: `800px`,
   width: `100%`,
+  [theme.breakpoints.down(`md`)]: {
+    width: `80%`,
+  },
   '& .MuiSelect-select, & .MuiInputBase-input': {
     backgroundColor: `white`,
   },

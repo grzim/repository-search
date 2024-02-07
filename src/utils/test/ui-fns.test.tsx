@@ -1,5 +1,6 @@
-import { getOptions, handleChange } from '../ui-fns';
+import { getOptions, handleChange, replaceWithNode } from '../ui-fns';
 import React from 'react';
+import { render } from '@testing-library/react';
 
 describe(`${getOptions.name}`, () => {
   it(`extracts values from HTMLOptionElements`, () => {
@@ -69,5 +70,40 @@ describe(`${handleChange.name}`, () => {
 
     const actualState = handleChange(mockEvent, initialState);
     expect(actualState).toEqual(expectedState);
+  });
+});
+
+describe(replaceWithNode.name, () => {
+  it(`handles multiple occurrences of the part`, () => {
+    const fullText = `Hello, world! Hello, world!`;
+    const partToReplaceWithNode = `world`;
+    const node = <em>ReactNode</em>;
+    const { getAllByText } = render(
+      replaceWithNode({ fullText, partToReplaceWithNode, node }),
+    );
+
+    expect(getAllByText(`ReactNode`)).toHaveLength(2);
+  });
+
+  it(`returns original text if part to replace is not found`, () => {
+    const fullText = `Hello, world!`;
+    const partToReplaceWithNode = `universe`;
+    const node = <span>ReactNode</span>;
+    const { getByText } = render(
+      replaceWithNode({ fullText, partToReplaceWithNode, node }),
+    );
+
+    expect(getByText(`Hello, world!`)).toBeInTheDocument();
+  });
+
+  it(`works with empty strings for part to replace`, () => {
+    const fullText = `Hello, world!`;
+    const partToReplaceWithNode = ``;
+    const node = <div>ReactNode</div>;
+    const { getByText } = render(
+      replaceWithNode({ fullText, partToReplaceWithNode, node }),
+    );
+
+    expect(getByText(`Hello, world!`)).toBeInTheDocument();
   });
 });

@@ -1,17 +1,26 @@
 import { useEffect, useState } from 'react';
-import { FetchSearchOptions } from '@ui/models/value-objects/search';
 import { FetchData } from '@ui/models/services/FetchData';
 import { APIModelToUIModelTransform } from 'src/domains/repository-search-ui/models/services';
-import { PaginationOptions } from '@ui/models/entities';
+import { PaginationOptions, SearchOptions } from '@ui/models/entities';
 import { AsyncResource, Metadata } from '@ui/models/aggregations/AsyncResource';
 import { errors } from '@ui/errors';
 
 type UseAsyncResource = <DataType>(props: {
   fetchFn: FetchData;
   transformFn: APIModelToUIModelTransform<DataType>;
-  searchOptions: FetchSearchOptions;
+  searchOptions: SearchOptions;
   paginationOptions?: PaginationOptions;
 }) => AsyncResource<DataType>;
+
+const getErrorMessage = (error: unknown) => {
+  const errorParsed = String(error);
+  const message =
+    error instanceof Error ? errorParsed.replace(`Error: `, ``) : String(error);
+  return Object.values(errors).includes(message)
+    ? message
+    : errors.defaultWhenRequestFail;
+};
+
 export const useAsyncResource: UseAsyncResource = <DataType>({
   transformFn,
   fetchFn,
@@ -20,7 +29,7 @@ export const useAsyncResource: UseAsyncResource = <DataType>({
 }: {
   fetchFn: FetchData;
   transformFn: APIModelToUIModelTransform<DataType>;
-  searchOptions: FetchSearchOptions;
+  searchOptions: SearchOptions;
   paginationOptions?: PaginationOptions;
 }) => {
   const [data, setData] = useState<DataType[]>([]);
@@ -32,42 +41,39 @@ export const useAsyncResource: UseAsyncResource = <DataType>({
     ...searchOptions,
     ...paginationOptions,
   };
-  const prepareFetching = () => {
+  const prepareFetch = () => {
     setIsLoading(true);
     setError(null);
   };
 
-  const fetching = async () => {
+  const performFetch = async (isMounted: boolean) => {
     const { edges, pageInfo, totalCount } = await fetchFn<DataType>(options);
-    setData(transformFn(edges));
-    if (pageInfo && totalCount) setMetadata({ ...pageInfo, totalCount });
+    if (isMounted) {
+      setData(transformFn(edges));
+      if (pageInfo && totalCount) setMetadata({ ...pageInfo, totalCount });
+    }
   };
 
   useEffect(() => {
+    let isMounted = true;
     const { searchTerm } = options;
     if (!searchTerm) return;
 
     const fetchData = async () => {
-      prepareFetching();
+      prepareFetch();
       try {
-        await fetching();
+        await performFetch(isMounted);
       } catch (error: unknown) {
-        const errorParsed = String(error);
-        const message =
-          error instanceof Error
-            ? errorParsed.replace(`Error: `, ``)
-            : String(error);
-        setError(
-          Object.values(errors).includes(message)
-            ? message
-            : errors.defaultWhenRequestFail,
-        );
+        setError(getErrorMessage(error));
       } finally {
         setIsLoading(false);
       }
     };
 
     fetchData();
+    return () => {
+      isMounted = false;
+    };
   }, [JSON.stringify(options)]);
 
   return {

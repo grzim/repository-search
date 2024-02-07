@@ -1,6 +1,5 @@
 import { Repository } from '@ui-entities/Repository';
 import { APIGetResponse } from '@ui/models/repositories/APIGetResponse';
-import { FetchSearchOptions } from '@ui-value-objects/search';
 import {
   orderDirections,
   orderFields,
@@ -8,6 +7,7 @@ import {
 } from '@ui-constants/index';
 import { createRange } from '@src/utils';
 import { GitHubResponseWrapper } from '@ui/models/repositories';
+import { SearchOptions } from '@ui/models/entities';
 
 export const getGraphQLRepoResponseMocks = (
   numberOfItems: number,
@@ -55,7 +55,7 @@ export const getRepositoriesMock = (numberOfItems: number): Repository[] =>
     url: `http://repos/${i}`,
   }));
 
-export const searchOptionsMock: FetchSearchOptions = {
+export const searchOptionsMock: SearchOptions = {
   searchTerm: `react`,
   orderBy: {
     field: orderFields[0],

@@ -165,7 +165,7 @@ In order to make type system scalable - there are as few hard-coded types as pos
 
 ## Components
 
-There are 4 components in the app
+There are 4 main components in the app
 
 ![components.png](public%2Fcomponents.png)
 

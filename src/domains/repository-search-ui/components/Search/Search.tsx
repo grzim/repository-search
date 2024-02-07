@@ -1,41 +1,34 @@
-import React, { ChangeEvent, useState } from 'react';
-import { Button, SelectChangeEvent, TextField } from '@mui/material';
+import React, { useState } from 'react';
+import { Button, TextField } from '@mui/material';
 import { SearchButtonContainer, SearchContainer } from './styles';
-import { FetchSearchOptions } from '@ui/models/value-objects/search';
 import { areObjectsEqual, handleChange } from '@src/utils';
 import { searchButtonId, searchInputId } from '@src/test-utils';
-import { getSelectsData, renderSelect } from '@ui-components/Search/utils';
+import { HandleInputChange, Selects } from '@ui-components/Search/utils';
+import { SearchOptions } from '@ui-entities/SearchOptions';
 
 type SearchProps = {
-  onSearchTermChange: (params: FetchSearchOptions) => void;
-  initialState: FetchSearchOptions;
+  onSearchTermChange: (params: SearchOptions) => void;
+  initialState: SearchOptions;
 };
 
 export const Search = ({ onSearchTermChange, initialState }: SearchProps) => {
-  const [state, setState] = useState<FetchSearchOptions>(initialState);
+  const [searchState, setSearchState] = useState<SearchOptions>(initialState);
   const [lastSearchState, setLastSearchState] =
-    useState<FetchSearchOptions>(initialState);
-  const handleInputChange = (
-    event:
-      | ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-      | SelectChangeEvent<unknown>,
-  ) => {
-    const newState = handleChange(event, state);
-    setState(newState);
+    useState<SearchOptions>(initialState);
+  const handleInputChange: HandleInputChange = (event) => {
+    const newState = handleChange(event, searchState);
+    setSearchState(newState);
   };
 
-  const selects = getSelectsData(state).map(
-    renderSelect({ handleInputChange }),
-  );
   const handleSearch = () => {
-    onSearchTermChange(state);
-    setLastSearchState(state);
+    onSearchTermChange(searchState);
+    setLastSearchState(searchState);
   };
 
   const isSearchDisabled =
-    areObjectsEqual({ obj1: state, obj2: lastSearchState }) ||
-    !state.searchTerm ||
-    !state.searchIn.length;
+    areObjectsEqual({ obj1: searchState, obj2: lastSearchState }) ||
+    !searchState.searchTerm ||
+    !searchState.searchIn.length;
 
   return (
     <SearchContainer>
@@ -44,15 +37,17 @@ export const Search = ({ onSearchTermChange, initialState }: SearchProps) => {
         label="Search Term"
         variant="outlined"
         name="searchTerm"
-        value={state.searchTerm}
+        value={searchState.searchTerm}
         onChange={handleInputChange}
         onKeyDown={(e) => {
           e.key === `Enter` && !isSearchDisabled && handleSearch();
         }}
         fullWidth
       />
-      <>{selects}</>
-
+      <Selects
+        searchOptions={searchState}
+        handleInputChange={handleInputChange}
+      />
       <SearchButtonContainer>
         <Button
           disabled={isSearchDisabled}

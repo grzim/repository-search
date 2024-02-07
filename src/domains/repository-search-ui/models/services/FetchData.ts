@@ -1,7 +1,6 @@
-import { FetchSearchOptions } from '@ui-value-objects/search';
 import { APIGetResponse } from '@ui/models/repositories/APIGetResponse';
-import { PaginationOptions } from '@ui/models/entities';
+import { PaginationOptions, SearchOptions } from '@ui/models/entities';
 
 export type FetchData = <DataType>(
-  options: FetchSearchOptions & PaginationOptions,
+  options: SearchOptions & PaginationOptions,
 ) => Promise<APIGetResponse<DataType>>;

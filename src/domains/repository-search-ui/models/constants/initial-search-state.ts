@@ -3,9 +3,9 @@ import {
   orderFields,
   searchInOptions,
 } from './search-options';
-import { FetchSearchOptions } from '@ui/models/value-objects/search';
+import { SearchOptions } from '@ui/models/entities';
 
-export const initialSearchState: FetchSearchOptions = {
+export const initialSearchState: SearchOptions = {
   searchTerm: ``,
   orderBy: {
     field: orderFields[0],

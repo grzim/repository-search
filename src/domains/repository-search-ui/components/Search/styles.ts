@@ -7,7 +7,7 @@ export const SearchContainer = styled(Box)<{ theme: Theme }>`
   gap: ${themeVariables.spacingBig};
   padding: ${themeVariables.spacingBig};
   ${({ theme }) => `
-    ${theme.breakpoints.down(`sm`)} {
+    ${theme.breakpoints.down(`md`)} {
       flex-direction: column;
     }
   `}

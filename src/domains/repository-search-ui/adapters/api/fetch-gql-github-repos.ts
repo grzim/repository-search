@@ -2,15 +2,14 @@ import { client } from '@api/apollo-client';
 import { REPOSITORIES_DETAILS_QUERY } from '@api/queries/repositories-details-query';
 import { constructQueryString } from './utils';
 import { removeEmpty } from '@src/utils';
-import { FetchSearchOptions } from '@ui-value-objects/search';
 import { APIGetResponse } from '@ui/models/repositories/APIGetResponse';
 import { GraphQLQueryResult } from '@ui/models/repositories/GraphQLQueryResult';
 import { FetchData } from '@ui/models/services/FetchData';
-import { PaginationOptions } from '@ui/models/entities';
+import { PaginationOptions, SearchOptions } from '@ui/models/entities';
 import { errors } from '@ui/errors';
 
 export const fetchGqlGithubRepos: FetchData = async <DataType>(
-  options: FetchSearchOptions & PaginationOptions,
+  options: SearchOptions & PaginationOptions,
 ): Promise<APIGetResponse<DataType>> => {
   const queryString = constructQueryString(options);
   const response = await client.query<

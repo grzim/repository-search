@@ -2,19 +2,20 @@ import { Repository } from '@ui/models/entities/Repository';
 import React, { ReactNode, useEffect, useState } from 'react';
 import {
   CircularProgress,
-  Link,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
   TableContainer,
-  TableRow,
+  Theme,
   Typography,
+  useMediaQuery,
 } from '@mui/material';
 import { loaderId, tableId } from '@src/test-utils';
+import { useTheme } from 'styled-components';
+import { TableView } from '@ui-components/RepositoriesList/utils/TableView';
+import { ListView } from '@ui-components/RepositoriesList/utils/ListView';
+import { RepoWithJsx } from '@ui-components/RepositoriesList/utils/types';
 
 export type RepositoriesListProps = {
-  repos: Repository[];
+  repos: RepoWithJsx[];
   isLoading: boolean;
   nameTransform?: (repo: Repository) => ReactNode;
 };
@@ -22,15 +23,18 @@ export type RepositoriesListProps = {
 export const getStargazers = (repo: Repository) => `🌟 ` + repo.stargazers;
 export const getForks = (repo: Repository) => `🍴 ` + repo.forks;
 export const RepositoriesList: React.FC<RepositoriesListProps> = ({
-  nameTransform = (repo: Repository) => repo.name,
   repos,
   isLoading,
 }) => {
   const [noDataText, setNoDataText] = useState(`Use search to fetch repos`);
   useEffect(() => {
     // after first search change the text
-    isLoading && setNoDataText(`No repos found`);
+    if (isLoading) setNoDataText(`No repos found`);
   }, [isLoading]);
+
+  const theme = useTheme() as Theme;
+  const isUpMd = useMediaQuery(theme.breakpoints.up(`md`));
+  const RepoView = isUpMd ? TableView : ListView;
 
   if (isLoading)
     return (
@@ -43,31 +47,7 @@ export const RepositoriesList: React.FC<RepositoriesListProps> = ({
 
   return (
     <TableContainer data-testid={tableId} component={Paper}>
-      <Table>
-        <TableBody>
-          {repos.map((repo) => (
-            <TableRow key={repo.url}>
-              <TableCell
-                component="th"
-                scope="row"
-                style={{
-                  overflow: `hidden`,
-                  textOverflow: `ellipsis`,
-                  whiteSpace: `nowrap`,
-                  width: 415,
-                  maxWidth: 415,
-                }}
-              >
-                <Link href={repo.url} target="_blank" rel="noopener noreferrer">
-                  {nameTransform(repo)}
-                </Link>
-              </TableCell>
-              <TableCell align="right"> {getStargazers(repo)} </TableCell>
-              <TableCell align="right"> {getForks(repo)}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <RepoView repos={repos} />
     </TableContainer>
   );
 };
