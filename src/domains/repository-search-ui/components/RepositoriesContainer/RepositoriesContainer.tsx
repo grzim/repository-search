@@ -59,8 +59,8 @@ export const RepositoriesContainer = () => {
       </RepositoriesListContainer>
       <Pagination
         isNextButtonDisabled={error === errors.maximumRequests || isLoading}
-        sideEffectOnPrev={goToPreviousPage}
-        sideEffectOnNext={goToNextPage}
+        onPrevious={goToPreviousPage}
+        onNext={goToNextPage}
         totalPages={Math.ceil(
           totalCount ? totalCount / defaultNumberOfItemsPerPage : 0,
         )}

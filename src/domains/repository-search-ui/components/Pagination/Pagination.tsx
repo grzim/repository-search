@@ -9,25 +9,25 @@ import {
 
 export type PaginationProps = {
   totalPages: number;
-  sideEffectOnNext: ToVoid;
-  sideEffectOnPrev: ToVoid;
+  onNext: ToVoid;
+  onPrevious: ToVoid;
   isNextButtonDisabled?: boolean;
 };
 
 export const Pagination: React.FC<PaginationProps> = ({
   totalPages,
-  sideEffectOnNext,
-  sideEffectOnPrev,
+  onNext,
+  onPrevious,
   isNextButtonDisabled = false,
 }) => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const onNextPage = () => {
     setCurrentPage((prevState) => prevState + 1);
-    sideEffectOnNext();
+    onNext();
   };
   const onPrevPage = () => {
     setCurrentPage((prevState) => prevState - 1);
-    sideEffectOnPrev();
+    onPrevious();
   };
   return totalPages > 1 ? (
     <Box

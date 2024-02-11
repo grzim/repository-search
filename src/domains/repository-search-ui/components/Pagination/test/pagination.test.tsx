@@ -14,11 +14,7 @@ describe(Pagination.name + ` Component`, () => {
 
   it(`does not render anything when totalPages is 1 or less`, () => {
     render(
-      <Pagination
-        totalPages={1}
-        sideEffectOnNext={jest.fn()}
-        sideEffectOnPrev={jest.fn()}
-      />,
+      <Pagination totalPages={1} onNext={jest.fn()} onPrevious={jest.fn()} />,
     );
 
     const prevButton = screen.queryByText(`Prev`);
@@ -30,11 +26,7 @@ describe(Pagination.name + ` Component`, () => {
 
   it(`renders pagination with prev, and next buttons when totalPages is greater than 1`, () => {
     render(
-      <Pagination
-        totalPages={3}
-        sideEffectOnNext={mockOnNext}
-        sideEffectOnPrev={mockOnPrev}
-      />,
+      <Pagination totalPages={3} onNext={mockOnNext} onPrevious={mockOnPrev} />,
     );
 
     expect(screen.getByTestId(paginationPrevId)).toBeInTheDocument();
@@ -43,11 +35,7 @@ describe(Pagination.name + ` Component`, () => {
 
   it(`calls onNext when Next button is clicked`, () => {
     render(
-      <Pagination
-        totalPages={3}
-        sideEffectOnNext={mockOnNext}
-        sideEffectOnPrev={mockOnPrev}
-      />,
+      <Pagination totalPages={3} onNext={mockOnNext} onPrevious={mockOnPrev} />,
     );
 
     fireEvent.click(screen.getByTestId(paginationNextId));
@@ -56,11 +44,7 @@ describe(Pagination.name + ` Component`, () => {
 
   it(`calls onPrev when Prev button is clicked`, () => {
     render(
-      <Pagination
-        totalPages={3}
-        sideEffectOnNext={mockOnNext}
-        sideEffectOnPrev={mockOnPrev}
-      />,
+      <Pagination totalPages={3} onNext={mockOnNext} onPrevious={mockOnPrev} />,
     );
 
     fireEvent.click(screen.getByTestId(paginationNextId));
@@ -70,11 +54,7 @@ describe(Pagination.name + ` Component`, () => {
 
   it(`disables Prev button on the first page`, () => {
     render(
-      <Pagination
-        totalPages={3}
-        sideEffectOnNext={mockOnNext}
-        sideEffectOnPrev={mockOnPrev}
-      />,
+      <Pagination totalPages={3} onNext={mockOnNext} onPrevious={mockOnPrev} />,
     );
     expect(screen.getByTestId(paginationPrevId)).toBeDisabled();
     fireEvent.click(screen.getByTestId(paginationNextId));
@@ -84,11 +64,7 @@ describe(Pagination.name + ` Component`, () => {
 
   it(`disables Next button on the last page`, () => {
     render(
-      <Pagination
-        totalPages={2}
-        sideEffectOnNext={mockOnNext}
-        sideEffectOnPrev={mockOnPrev}
-      />,
+      <Pagination totalPages={2} onNext={mockOnNext} onPrevious={mockOnPrev} />,
     );
     fireEvent.click(screen.getByTestId(paginationNextId));
 
