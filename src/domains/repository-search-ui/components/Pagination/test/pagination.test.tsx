@@ -40,6 +40,7 @@ describe(Pagination.name + ` Component`, () => {
 
     fireEvent.click(screen.getByTestId(paginationNextId));
     expect(mockOnNext).toHaveBeenCalled();
+    expect(mockOnPrev).not.toHaveBeenCalled();
   });
 
   it(`calls onPrev when Prev button is clicked`, () => {
@@ -50,6 +51,7 @@ describe(Pagination.name + ` Component`, () => {
     fireEvent.click(screen.getByTestId(paginationNextId));
     fireEvent.click(screen.getByTestId(paginationPrevId));
     expect(mockOnPrev).toHaveBeenCalled();
+    expect(mockOnNext).toHaveBeenCalledTimes(1);
   });
 
   it(`disables Prev button on the first page`, () => {
